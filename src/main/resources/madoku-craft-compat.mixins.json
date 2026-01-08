@@ -1,0 +1,17 @@
+{
+	"required": true,
+	"package": "madoku.craft.compat.mixin",
+	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"health.MadokuHealthManagerCompatMixin",
+		"hunger.HungerFeatureAccessor",
+		"hunger.HungerFeatureCompatMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
