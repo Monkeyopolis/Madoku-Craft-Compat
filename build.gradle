@@ -17,7 +17,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven {
-		url "https://www.cursemaven.com"
+		url = "https://www.cursemaven.com"
 		content {
 			includeGroup "curse.maven"
 		}
@@ -46,11 +46,11 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Madoku Craft API
-	modImplementation "curse.maven:madoku-craft-api-1419561:7424696"
+	modImplementation "curse.maven:madoku-craft-api-1419561:${project.madoku_craft_api_version}"
 
 	// Optional Madoku Craft add-ons
-	modImplementation "curse.maven:madoku-craft-hunger-1422163:7425205"
-	modImplementation "curse.maven:madoku-craft-health-1420709:7424826"
+	modImplementation "curse.maven:madoku-craft-hunger-1422163:${project.madoku_craft_hunger_version}"
+	modImplementation "curse.maven:madoku-craft-health-1420709:${project.madoku_craft_health_version}"
 	
 }
 
