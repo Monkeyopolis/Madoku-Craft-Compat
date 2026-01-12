@@ -38,6 +38,7 @@
 	},
 	"suggests": {
 		"madoku-craft-hunger": "*",
-		"madoku-craft-health": "*"
+		"madoku-craft-health": "*",
+		"madoku-craft-armor": "*"
 	}
 }

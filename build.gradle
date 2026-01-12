@@ -51,6 +51,7 @@ dependencies {
 	// Optional Madoku Craft add-ons
 	modImplementation "curse.maven:madoku-craft-hunger-1422163:${project.madoku_craft_hunger_version}"
 	modImplementation "curse.maven:madoku-craft-health-1420709:${project.madoku_craft_health_version}"
+	modImplementation "curse.maven:madoku-craft-armor-1425561:${project.madoku_craft_armor_version}"
 	
 }
 
