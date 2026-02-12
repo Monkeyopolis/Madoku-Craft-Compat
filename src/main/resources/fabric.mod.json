@@ -39,6 +39,7 @@
 	"suggests": {
 		"madoku-craft-hunger": "*",
 		"madoku-craft-health": "*",
-		"madoku-craft-armor": "*"
+		"madoku-craft-armor": "*",
+		"madoku-craft-smelting": "*"
 	}
 }

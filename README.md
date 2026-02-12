@@ -12,3 +12,5 @@ Supported Mods:
 - Madoku Craft: Health
 - Madoku Craft: Hunger
 - Madoku Craft: Armor
+- Madoku Craft: Stacks
+- Madoku Craft: Smelting

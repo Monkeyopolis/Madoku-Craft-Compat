@@ -53,6 +53,7 @@ dependencies {
 	modImplementation "curse.maven:madoku-craft-health-1420709:${project.madoku_craft_health_version}"
 	modImplementation "curse.maven:madoku-craft-armor-1425561:${project.madoku_craft_armor_version}"
 	modImplementation "curse.maven:madoku-craft-stacks-1426937:${project.madoku_craft_stacks_version}"
+	modImplementation "curse.maven:madoku-craft-smelting-1430263:${project.madoku_craft_smelting_version}"
 	
 }
 
