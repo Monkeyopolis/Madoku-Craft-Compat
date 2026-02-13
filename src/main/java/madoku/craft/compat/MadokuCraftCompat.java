@@ -1,5 +1,6 @@
 package madoku.craft.compat;
 
+import madoku.craft.compat.system.ArmorAttributeLimitSystem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -16,6 +17,12 @@ public class MadokuCraftCompat implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		boolean armorLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-armor");
+		boolean toolsLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-tools");
+		if (armorLoaded && toolsLoaded) {
+			ArmorAttributeLimitSystem.init();
+		}
+
 		boolean hungerLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-hunger");
 		boolean healthLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-health");
 		if (hungerLoaded && healthLoaded) {

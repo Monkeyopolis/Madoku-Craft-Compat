@@ -11,12 +11,16 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 	private boolean hungerLoaded;
 	private boolean healthLoaded;
+	private boolean armorLoaded;
+	private boolean toolsLoaded;
 
 	@Override
 	public void onLoad(String mixinPackage) {
 		FabricLoader loader = FabricLoader.getInstance();
 		hungerLoaded = loader.isModLoaded("madoku-craft-hunger");
 		healthLoaded = loader.isModLoaded("madoku-craft-health");
+		armorLoaded = loader.isModLoaded("madoku-craft-armor");
+		toolsLoaded = loader.isModLoaded("madoku-craft-tools");
 	}
 
 	@Override
@@ -30,10 +34,22 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 			return hungerLoaded && healthLoaded;
 		}
 		if (mixinClassName.endsWith("HungerFeatureAccessor")) {
-			return hungerLoaded;
+			return hungerLoaded && healthLoaded;
 		}
 		if (mixinClassName.endsWith("MadokuHealthManagerCompatMixin")) {
 			return hungerLoaded && healthLoaded;
+		}
+		if (mixinClassName.endsWith("CustomArmorSystemCompatMixin")) {
+			return armorLoaded && toolsLoaded;
+		}
+		if (mixinClassName.endsWith("CustomToolsConfigCompatMixin")) {
+			return armorLoaded && toolsLoaded;
+		}
+		if (mixinClassName.endsWith("ToolRarityManagerCompatMixin")) {
+			return armorLoaded && toolsLoaded;
+		}
+		if (mixinClassName.endsWith("ClampedEntityAttributeAccessor")) {
+			return armorLoaded && toolsLoaded;
 		}
 		return true;
 	}

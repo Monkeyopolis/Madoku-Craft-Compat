@@ -4,9 +4,13 @@
 	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"armor.CustomArmorSystemCompatMixin",
+		"attribute.ClampedEntityAttributeAccessor",
 		"health.MadokuHealthManagerCompatMixin",
 		"hunger.HungerFeatureAccessor",
-		"hunger.HungerFeatureCompatMixin"
+		"hunger.HungerFeatureCompatMixin",
+		"tools.ToolRarityManagerCompatMixin",
+		"tools.CustomToolsConfigCompatMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
