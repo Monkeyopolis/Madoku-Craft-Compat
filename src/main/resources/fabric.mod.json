@@ -41,6 +41,7 @@
 		"madoku-craft-health": "*",
 		"madoku-craft-armor": "*",
 		"madoku-craft-smelting": "*",
-		"madoku-craft-tools": "*"
+		"madoku-craft-tools": "*",
+		"madoku-craft-hud": "*"
 	}
 }

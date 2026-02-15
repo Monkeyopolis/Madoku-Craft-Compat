@@ -15,7 +15,7 @@ public class CustomToolsConfigCompatMixin {
 	private static final double[] TOUGHNESS = {2.5d, 5.0d, 7.5d, 10.0d, 12.5d, 15.0d};
 
 	@Inject(method = "update", at = @At("HEAD"), remap = false)
-	private void madokuCompat$overrideHelmetValuesAtLoad(JsonObject root, CallbackInfoReturnable<Boolean> cir) {
+	private void madokuCompat$ensureArmorValuesAtLoad(JsonObject root, CallbackInfoReturnable<Boolean> cir) {
 		if (root == null) {
 			return;
 		}
@@ -23,18 +23,18 @@ public class CustomToolsConfigCompatMixin {
 		JsonObject overrides = getOrCreateObject(root, "overrides");
 		for (String piece : ARMOR_PIECES) {
 			JsonObject pieceRoot = getOrCreateObject(overrides, piece);
-			overrideArmorPieceValues(pieceRoot, piece);
+			ensureArmorPieceValues(pieceRoot, piece);
 		}
 	}
 
 	@Inject(method = "buildArmorPieceDefaults", at = @At("RETURN"), cancellable = true, remap = false)
-	private static void madokuCompat$overrideHelmetDefaults(String suffix, CallbackInfoReturnable<JsonObject> cir) {
+	private static void madokuCompat$ensureArmorDefaults(String suffix, CallbackInfoReturnable<JsonObject> cir) {
 		if (!isArmorPieceSuffix(suffix)) {
 			return;
 		}
 
 		JsonObject category = cir.getReturnValue();
-		overrideArmorPieceValues(category, suffix);
+		ensureArmorPieceValues(category, suffix);
 		cir.setReturnValue(category);
 	}
 
@@ -56,14 +56,21 @@ public class CustomToolsConfigCompatMixin {
 		return false;
 	}
 
-	private static void overrideArmorPieceValues(JsonObject category, String piece) {
+	private static void ensureArmorPieceValues(JsonObject category, String piece) {
 		for (int i = 0; i < ARMOR_MATERIALS.length; i++) {
 			String id = "minecraft:" + ARMOR_MATERIALS[i] + "_" + piece;
-			JsonObject entry = new JsonObject();
-			entry.addProperty("durability", DURABILITY[i]);
-			entry.addProperty("armor", ARMOR[i]);
-			entry.addProperty("armorToughness", TOUGHNESS[i]);
-			category.add(id, entry);
+			JsonObject entry = getOrCreateObject(category, id);
+			ensureNumber(entry, "durability", DURABILITY[i]);
+			ensureNumber(entry, "armor", ARMOR[i]);
+			ensureNumber(entry, "armorToughness", TOUGHNESS[i]);
 		}
+	}
+
+	private static void ensureNumber(JsonObject parent, String key, Number value) {
+		if (parent.has(key) && parent.get(key).isJsonPrimitive()
+				&& parent.getAsJsonPrimitive(key).isNumber()) {
+			return;
+		}
+		parent.addProperty(key, value);
 	}
 }

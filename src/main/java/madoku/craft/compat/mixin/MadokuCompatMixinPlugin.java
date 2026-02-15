@@ -13,6 +13,7 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 	private boolean healthLoaded;
 	private boolean armorLoaded;
 	private boolean toolsLoaded;
+	private boolean hudLoaded;
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -21,6 +22,7 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		healthLoaded = loader.isModLoaded("madoku-craft-health");
 		armorLoaded = loader.isModLoaded("madoku-craft-armor");
 		toolsLoaded = loader.isModLoaded("madoku-craft-tools");
+		hudLoaded = loader.isModLoaded("madoku-craft-hud");
 	}
 
 	@Override
@@ -50,6 +52,18 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		}
 		if (mixinClassName.endsWith("ClampedEntityAttributeAccessor")) {
 			return armorLoaded && toolsLoaded;
+		}
+		if (mixinClassName.endsWith("HealthHudSystemCompatMixin")) {
+			return hudLoaded && healthLoaded;
+		}
+		if (mixinClassName.endsWith("HungerHudSystemCompatMixin")) {
+			return hudLoaded && hungerLoaded;
+		}
+		if (mixinClassName.endsWith("HungerClientStateCompatMixin")) {
+			return hudLoaded && hungerLoaded;
+		}
+		if (mixinClassName.endsWith("ArmorHudSystemCompatMixin")) {
+			return hudLoaded && armorLoaded;
 		}
 		return true;
 	}

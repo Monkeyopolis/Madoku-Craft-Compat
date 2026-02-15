@@ -15,3 +15,4 @@ Supported Mods:
 - Madoku Craft: Stacks
 - Madoku Craft: Smelting
 - Madoku Craft: Tools
+- Madoku Craft: HUD

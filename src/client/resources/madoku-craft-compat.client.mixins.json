@@ -1,9 +1,14 @@
 {
 	"required": true,
 	"package": "madoku.craft.compat.mixin.client",
+	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin"
+		"ExampleClientMixin",
+		"hud.ArmorHudSystemCompatMixin",
+		"hud.HealthHudSystemCompatMixin",
+		"hud.HungerClientStateCompatMixin",
+		"hud.HungerHudSystemCompatMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
