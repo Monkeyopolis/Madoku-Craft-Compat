@@ -53,9 +53,6 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		if (mixinClassName.endsWith("ClampedEntityAttributeAccessor")) {
 			return armorLoaded && toolsLoaded;
 		}
-		if (mixinClassName.endsWith("HealthHudSystemCompatMixin")) {
-			return hudLoaded && healthLoaded;
-		}
 		if (mixinClassName.endsWith("HungerHudSystemCompatMixin")) {
 			return hudLoaded && hungerLoaded;
 		}

@@ -19,9 +19,9 @@ public interface HungerFeatureAccessor {
 	@Invoker("calculateMaxHunger")
 	int madokuCompat$calculateMaxHunger(ServerPlayerEntity player);
 
-	@Invoker("applyHungerDepletion")
-	void madokuCompat$applyHungerDepletion(PlayerHungerData data, int amount);
+	@Invoker("toHungerUnits")
+	int madokuCompat$toHungerUnits(int points);
 
-	@Invoker("addSurplus")
-	void madokuCompat$addSurplus(PlayerHungerData data, int amount, int maxHunger);
+	@Invoker("markDirty")
+	void madokuCompat$markDirty();
 }

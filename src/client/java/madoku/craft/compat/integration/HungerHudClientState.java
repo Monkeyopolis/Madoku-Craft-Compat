@@ -1,7 +1,9 @@
 package madoku.craft.compat.integration;
 
 public final class HungerHudClientState {
-	private static volatile int displayPoints;
+	private static final double HUNGER_UNIT_SCALE = 8.0d;
+
+	private static volatile int currentPoints;
 	private static volatile int max;
 	private static volatile boolean hasData;
 
@@ -10,60 +12,36 @@ public final class HungerHudClientState {
 
 	public static void update(int currentHunger, int pendingHunger, int maxHunger) {
 		int safeCurrent = Math.max(0, currentHunger);
-		int safePending = Math.max(0, pendingHunger);
 		max = Math.max(0, maxHunger);
-		displayPoints = safeCurrent + safePending;
-		if (max > 0 && displayPoints > max) {
-			displayPoints = max;
+		currentPoints = safeCurrent;
+		if (max > 0 && currentPoints > max) {
+			currentPoints = max;
 		}
 		hasData = max > 0;
 	}
 
 	public static void clear() {
-		displayPoints = 0;
+		currentPoints = 0;
 		max = 0;
 		hasData = false;
 	}
 
-	public static int toHudFoodLevel() {
+	public static int toHudCurrentPoints() {
 		if (!hasData || max <= 0) {
 			return -1;
 		}
-		double ratio = (double) displayPoints / (double) max;
-		int scaled = (int) Math.round(ratio * 20.0d);
-		if (scaled < 0) {
-			return 0;
-		}
-		if (scaled > 20) {
-			return 20;
-		}
-		return scaled;
+		return Math.max(0, madokuCompat$toDisplayPoints(currentPoints));
 	}
 
-	public static String toHudText(String fallback) {
+	public static int toHudMaxPoints() {
 		if (!hasData || max <= 0) {
-			return fallback;
+			return -1;
 		}
-		int shownMax = Math.max(1, max);
-		int shownPoints = Math.max(0, displayPoints);
-		if (shownPoints > shownMax) {
-			shownPoints = shownMax;
-		}
+		return Math.max(1, madokuCompat$toDisplayPoints(max));
+	}
 
-		String prefix = "";
-		if (fallback != null && !fallback.isEmpty()) {
-			int firstDigit = -1;
-			for (int i = 0; i < fallback.length(); i++) {
-				if (Character.isDigit(fallback.charAt(i))) {
-					firstDigit = i;
-					break;
-				}
-			}
-			if (firstDigit > 0) {
-				prefix = fallback.substring(0, firstDigit);
-			}
-		}
-
-		return prefix + shownPoints + "/" + shownMax;
+	private static int madokuCompat$toDisplayPoints(int rawUnits) {
+		double displayValue = Math.max(0.0d, rawUnits) / HUNGER_UNIT_SCALE;
+		return (int) Math.round(displayValue);
 	}
 }

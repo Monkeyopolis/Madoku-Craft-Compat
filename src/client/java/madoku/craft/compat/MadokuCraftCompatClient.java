@@ -11,12 +11,7 @@ public class MadokuCraftCompatClient implements ClientModInitializer {
 		if (!hudLoaded) {
 			return;
 		}
-		if (loader.isModLoaded("madoku-craft-health")) {
-			MadokuCraftCompat.LOGGER.info("Madoku Craft Compat: HUD/Health integration enabled.");
-		}
-		if (loader.isModLoaded("madoku-craft-hunger")) {
-			MadokuCraftCompat.LOGGER.info("Madoku Craft Compat: HUD/Hunger integration enabled.");
-		}
+
 		if (loader.isModLoaded("madoku-craft-armor")) {
 			MadokuCraftCompat.LOGGER.info("Madoku Craft Compat: HUD/Armor integration enabled.");
 		}

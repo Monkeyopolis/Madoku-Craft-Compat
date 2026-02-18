@@ -1,9 +1,5 @@
 package madoku.craft.compat.integration;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import madoku.craft.Health.system.MadokuHealthManager;
 import madoku.craft.Hunger.system.HungerFeature;
 import madoku.craft.Hunger.system.PlayerHungerData;
@@ -12,8 +8,6 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 
 public final class HungerCompat {
-	private static final Map<ServerPlayerEntity, Double> HEALTH_SURPLUS_REMAINDER =
-			Collections.synchronizedMap(new WeakHashMap<>());
 	private static final ThreadLocal<Boolean> HEALTH_FOOD_CALL =
 			ThreadLocal.withInitial(() -> Boolean.FALSE);
 
@@ -52,7 +46,16 @@ public final class HungerCompat {
 		if (data == null) {
 			return false;
 		}
-		accessor.madokuCompat$applyHungerDepletion(data, amount);
+		int hungerUnits = accessor.madokuCompat$toHungerUnits(amount);
+		if (hungerUnits <= 0 || data.currentHungerPoints <= 0) {
+			return false;
+		}
+		int drained = Math.min(hungerUnits, data.currentHungerPoints);
+		data.currentHungerPoints -= drained;
+		if (data.queuedHungerDepletionPoints > data.currentHungerPoints) {
+			data.queuedHungerDepletionPoints = data.currentHungerPoints;
+		}
+		accessor.madokuCompat$markDirty();
 		syncVanillaFoodLevel(player);
 		return true;
 	}
@@ -73,35 +76,6 @@ public final class HungerCompat {
 
 	public static boolean isHealthFoodBridgeActive() {
 		return HEALTH_FOOD_CALL.get();
-	}
-
-	public static boolean addSurplusFromHealth(ServerPlayerEntity player, double amount) {
-		if (player == null || amount <= 0.0d) {
-			return false;
-		}
-		HungerFeature feature = HungerFeature.getInstance();
-		if (feature == null) {
-			return false;
-		}
-		HungerFeatureAccessor accessor = (HungerFeatureAccessor) (Object) feature;
-		PlayerHungerData data = accessor.madokuCompat$getPlayerData(player);
-		if (data == null) {
-			return false;
-		}
-		double remainder = HEALTH_SURPLUS_REMAINDER.getOrDefault(player, 0.0d);
-		double total = remainder + amount;
-		int points = (int) Math.floor(total + 1.0e-9);
-		double newRemainder = total - points;
-		if (newRemainder < 1.0e-9) {
-			newRemainder = 0.0d;
-		}
-		HEALTH_SURPLUS_REMAINDER.put(player, newRemainder);
-		if (points <= 0) {
-			return false;
-		}
-		int max = accessor.madokuCompat$calculateMaxHunger(player);
-		accessor.madokuCompat$addSurplus(data, points, max);
-		return true;
 	}
 
 	private static void applyVanillaFoodLevel(ServerPlayerEntity player, int foodLevel) {

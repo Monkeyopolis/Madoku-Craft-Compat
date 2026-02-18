@@ -3,7 +3,7 @@ package madoku.craft.compat.system;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import madoku.craft.API.system.JsonFeatureSystem;
+import madoku.craft.API.system.MadokuJSONSystem;
 import madoku.craft.compat.MadokuCraftCompat;
 import madoku.craft.compat.mixin.attribute.ClampedEntityAttributeAccessor;
 import net.minecraft.entity.attribute.ClampedEntityAttribute;
@@ -13,6 +13,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 
 public final class ArmorAttributeLimitSystem {
 	private static final String FEATURE_ID = "madoku_craft_compat";
+	private static final String JSON_FOLDER_ID = "Compat";
 	private static final String KEY_ARMOR_MAX_VALUE = "armorMaxValue";
 	private static final String KEY_ARMOR_TOUGHNESS_MAX_VALUE = "armorToughnessMaxValue";
 	private static final double DEFAULT_MAX_VALUE = 100.0d;
@@ -25,7 +26,7 @@ public final class ArmorAttributeLimitSystem {
 		defaults.addProperty(KEY_ARMOR_MAX_VALUE, DEFAULT_MAX_VALUE);
 		defaults.addProperty(KEY_ARMOR_TOUGHNESS_MAX_VALUE, DEFAULT_MAX_VALUE);
 
-		JsonFeatureSystem.ManagedFeature config = JsonFeatureSystem.loadFeature(FEATURE_ID, defaults);
+		MadokuJSONSystem.ManagedJSON config = MadokuJSONSystem.load(JSON_FOLDER_ID, FEATURE_ID, defaults);
 		SettingsLoadResult load = readSettings(config.getRoot());
 		if (load.changed()) {
 			config.save();

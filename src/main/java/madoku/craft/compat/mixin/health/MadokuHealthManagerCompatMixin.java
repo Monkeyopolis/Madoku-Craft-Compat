@@ -6,7 +6,6 @@ import net.minecraft.entity.player.HungerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -28,30 +27,6 @@ public class MadokuHealthManagerCompatMixin {
 		if (!HungerCompat.isHealthFoodBridgeActive() && isHealthFoodMixinCall()) {
 			cir.setReturnValue(false);
 		}
-	}
-
-	@Redirect(
-			method = "addPendingFromFood",
-			at = @At(
-					value = "INVOKE",
-					target = "Lmadoku/craft/Health/system/MadokuHealthManager$PlayerHealthState;addHealthSurplusPoints(D)V"
-			)
-	)
-	private void madokuCompat$redirectHealthSurplusFromFood(@Coerce Object state, double amount,
-			ServerPlayerEntity player, double foodAmount) {
-		HungerCompat.addSurplusFromHealth(player, amount);
-	}
-
-	@Redirect(
-			method = "tickPlayer",
-			at = @At(
-					value = "INVOKE",
-					target = "Lmadoku/craft/Health/system/MadokuHealthManager$PlayerHealthState;addHealthSurplusPoints(D)V"
-			)
-	)
-	private void madokuCompat$redirectHealthSurplusFromTick(@Coerce Object state, double amount,
-			ServerPlayerEntity player) {
-		HungerCompat.addSurplusFromHealth(player, amount);
 	}
 
 	@Redirect(

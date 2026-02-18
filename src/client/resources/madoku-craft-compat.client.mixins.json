@@ -4,9 +4,7 @@
 	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"ExampleClientMixin",
 		"hud.ArmorHudSystemCompatMixin",
-		"hud.HealthHudSystemCompatMixin",
 		"hud.HungerClientStateCompatMixin",
 		"hud.HungerHudSystemCompatMixin"
 	],
