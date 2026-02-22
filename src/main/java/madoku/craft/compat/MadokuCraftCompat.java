@@ -2,6 +2,7 @@ package madoku.craft.compat;
 
 import madoku.craft.compat.system.ArmorAttributeLimitSystem;
 import madoku.craft.compat.system.CompatConfigSystem;
+import madoku.craft.compat.integration.hud.WorldHudDifficultySync;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -30,6 +31,11 @@ public class MadokuCraftCompat implements ModInitializer {
 		boolean healthLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-health");
 		if (hungerLoaded && healthLoaded) {
 			LOGGER.info("Madoku Craft Compat: Hunger/Health integration enabled.");
+		}
+
+		boolean difficultyLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-difficulty");
+		if (difficultyLoaded) {
+			WorldHudDifficultySync.init();
 		}
 	}
 }

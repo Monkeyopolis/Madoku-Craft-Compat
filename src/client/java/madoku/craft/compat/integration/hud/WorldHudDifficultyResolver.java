@@ -33,7 +33,9 @@ import net.minecraft.world.gen.structure.Structure;
 public final class WorldHudDifficultyResolver {
 	private static final long TICKS_PER_DAY = 24_000L;
 	private static final int STRUCTURE_CACHE_MAX_ENTRIES = 1024;
+	private static final int NO_SYNCED_DIFFICULTY = Integer.MIN_VALUE;
 	private static boolean configInitialized;
+	private static volatile int syncedTotalDifficulty = NO_SYNCED_DIFFICULTY;
 	private static final Map<StructureCacheKey, StructureChunkCache> STRUCTURE_LOOKUP_CACHE = Collections
 			.synchronizedMap(new LinkedHashMap<>(STRUCTURE_CACHE_MAX_ENTRIES, 0.75f, true) {
 				@Override
@@ -49,9 +51,21 @@ public final class WorldHudDifficultyResolver {
 		STRUCTURE_LOOKUP_CACHE.clear();
 	}
 
+	public static void clearServerSyncedTotalDifficulty() {
+		syncedTotalDifficulty = NO_SYNCED_DIFFICULTY;
+	}
+
+	public static void setServerSyncedTotalDifficulty(int totalDifficulty) {
+		syncedTotalDifficulty = Math.max(0, totalDifficulty);
+	}
+
 	public static int resolveTotalDifficulty(MinecraftClient client, ClientPlayerEntity player) {
 		if (client == null || player == null) {
 			return 0;
+		}
+
+		if (client.getServer() == null && syncedTotalDifficulty != NO_SYNCED_DIFFICULTY) {
+			return syncedTotalDifficulty;
 		}
 
 		ensureConfigInitialized();

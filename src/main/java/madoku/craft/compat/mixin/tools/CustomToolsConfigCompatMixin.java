@@ -1,6 +1,7 @@
 package madoku.craft.compat.mixin.tools;
 
 import com.google.gson.JsonObject;
+import madoku.craft.compat.system.CompatConfigSystem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,12 +12,17 @@ public class CustomToolsConfigCompatMixin {
 	private static final String[] ARMOR_PIECES = {"helmet", "chestplate", "leggings", "boots"};
 	private static final String[] ARMOR_MATERIALS = {"leather", "copper", "iron", "golden", "diamond", "netherite"};
 	private static final int[] DURABILITY = {192, 256, 384, 512, 768, 1024};
-	private static final double[] ARMOR = {0.5d, 1.0d, 1.5d, 2.0d, 2.5d, 3.0d};
-	private static final double[] TOUGHNESS = {2.5d, 5.0d, 7.5d, 10.0d, 12.5d, 15.0d};
+	private static final double[] COMPAT_ARMOR = {0.5d, 1.0d, 1.5d, 2.0d, 2.5d, 3.0d};
+	private static final double[] COMPAT_TOUGHNESS = {2.5d, 5.0d, 7.5d, 10.0d, 12.5d, 15.0d};
+	private static final double[] TOOLS_DEFAULT_ARMOR = {1.0d, 2.0d, 3.0d, 3.0d, 4.0d, 5.0d};
+	private static final double[] TOOLS_DEFAULT_TOUGHNESS = {0.0d, 1.0d, 1.0d, 2.0d, 2.0d, 3.0d};
 
 	@Inject(method = "update", at = @At("HEAD"), remap = false)
 	private void madokuCompat$ensureArmorValuesAtLoad(JsonObject root, CallbackInfoReturnable<Boolean> cir) {
 		if (root == null) {
+			return;
+		}
+		if (!CompatConfigSystem.isToolsArmorDefaultsMigrationPending()) {
 			return;
 		}
 
@@ -25,11 +31,15 @@ public class CustomToolsConfigCompatMixin {
 			JsonObject pieceRoot = getOrCreateObject(overrides, piece);
 			ensureArmorPieceValues(pieceRoot, piece);
 		}
+		CompatConfigSystem.markToolsArmorDefaultsMigrationCompleted();
 	}
 
 	@Inject(method = "buildArmorPieceDefaults", at = @At("RETURN"), cancellable = true, remap = false)
 	private static void madokuCompat$ensureArmorDefaults(String suffix, CallbackInfoReturnable<JsonObject> cir) {
 		if (!isArmorPieceSuffix(suffix)) {
+			return;
+		}
+		if (!CompatConfigSystem.isToolsArmorDefaultsMigrationPending()) {
 			return;
 		}
 
@@ -61,8 +71,13 @@ public class CustomToolsConfigCompatMixin {
 			String id = "minecraft:" + ARMOR_MATERIALS[i] + "_" + piece;
 			JsonObject entry = getOrCreateObject(category, id);
 			ensureNumber(entry, "durability", DURABILITY[i]);
-			ensureNumber(entry, "armor", ARMOR[i]);
-			ensureNumber(entry, "armorToughness", TOUGHNESS[i]);
+			migrateFromToolsDefault(entry, "armor", TOOLS_DEFAULT_ARMOR[i], COMPAT_ARMOR[i]);
+			migrateFromToolsDefault(
+					entry,
+					"armorToughness",
+					TOOLS_DEFAULT_TOUGHNESS[i],
+					COMPAT_TOUGHNESS[i]
+			);
 		}
 	}
 
@@ -72,5 +87,17 @@ public class CustomToolsConfigCompatMixin {
 			return;
 		}
 		parent.addProperty(key, value);
+	}
+
+	private static void migrateFromToolsDefault(JsonObject parent, String key, double toolsDefault, double compatValue) {
+		if (!parent.has(key) || !parent.get(key).isJsonPrimitive() || !parent.getAsJsonPrimitive(key).isNumber()) {
+			parent.addProperty(key, compatValue);
+			return;
+		}
+
+		double current = parent.getAsJsonPrimitive(key).getAsDouble();
+		if (Double.compare(current, toolsDefault) == 0) {
+			parent.addProperty(key, compatValue);
+		}
 	}
 }

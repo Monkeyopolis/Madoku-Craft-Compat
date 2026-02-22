@@ -1,6 +1,7 @@
 package madoku.craft.compat;
 
 import madoku.craft.compat.integration.hud.WorldHudDifficultyResolver;
+import madoku.craft.compat.integration.hud.WorldHudDifficultySyncClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -15,10 +16,17 @@ public class MadokuCraftCompatClient implements ClientModInitializer {
 		}
 		boolean difficultyLoaded = loader.isModLoaded("madoku-craft-difficulty");
 		if (difficultyLoaded) {
+			WorldHudDifficultySyncClient.init();
 			ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
-					WorldHudDifficultyResolver.clearStructureCache());
+			{
+				WorldHudDifficultyResolver.clearStructureCache();
+				WorldHudDifficultyResolver.clearServerSyncedTotalDifficulty();
+			});
 			ClientPlayConnectionEvents.DISCONNECT.register((handler, client) ->
-					WorldHudDifficultyResolver.clearStructureCache());
+			{
+				WorldHudDifficultyResolver.clearStructureCache();
+				WorldHudDifficultyResolver.clearServerSyncedTotalDifficulty();
+			});
 		}
 
 		if (loader.isModLoaded("madoku-craft-armor")) {

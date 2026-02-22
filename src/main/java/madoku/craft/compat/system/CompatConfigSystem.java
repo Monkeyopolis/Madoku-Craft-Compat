@@ -13,6 +13,8 @@ public final class CompatConfigSystem {
 	private static final String KEY_ARMOR_CAPS = "attribute_caps";
 	private static final String KEY_ARMOR_MAX_VALUE = "armor_max_value";
 	private static final String KEY_ARMOR_TOUGHNESS_MAX_VALUE = "armor_toughness_max_value";
+	private static final String KEY_TOOLS_ROOT = "madoku_craft_tools";
+	private static final String KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING = "armor_defaults_migration_pending";
 
 	private static final String KEY_COMPAT_MOBS_ROOT = "madoku_craft_compat_mobs";
 	private static final String KEY_DIFFICULTY_SCALING = "difficulty_scaling";
@@ -59,6 +61,28 @@ public final class CompatConfigSystem {
 		return snapshot;
 	}
 
+	public static boolean isToolsArmorDefaultsMigrationPending() {
+		return get().tools().armorDefaultsMigrationPending();
+	}
+
+	public static synchronized void markToolsArmorDefaultsMigrationCompleted() {
+		if (!isToolsArmorDefaultsMigrationPending()) {
+			return;
+		}
+
+		JsonObject defaults = buildDefaults();
+		MadokuJSONSystem.ManagedJSON config = MadokuJSONSystem.load(JSON_FOLDER_ID, FEATURE_ID, defaults);
+		JsonObject root = config.getRoot();
+		JsonObject toolsRoot = getOrCreateObject(root, KEY_TOOLS_ROOT);
+		if (setBoolean(toolsRoot, KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING, false)) {
+			config.save();
+		}
+
+		Snapshot current = snapshot;
+		snapshot = new Snapshot(current.armor(), current.mobCompatScaling(), new ToolsSettings(false));
+		initialized = true;
+	}
+
 	private static JsonObject buildDefaults() {
 		JsonObject root = new JsonObject();
 
@@ -68,6 +92,10 @@ public final class CompatConfigSystem {
 		armorCaps.addProperty(KEY_ARMOR_TOUGHNESS_MAX_VALUE, DEFAULT_ARMOR_TOUGHNESS_MAX);
 		armorRoot.add(KEY_ARMOR_CAPS, armorCaps);
 		root.add(KEY_ARMOR_ROOT, armorRoot);
+
+		JsonObject toolsRoot = new JsonObject();
+		toolsRoot.addProperty(KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING, true);
+		root.add(KEY_TOOLS_ROOT, toolsRoot);
 
 		JsonObject compatMobsRoot = new JsonObject();
 		JsonObject scalingRoot = new JsonObject();
@@ -100,6 +128,7 @@ public final class CompatConfigSystem {
 
 		JsonObject armorRoot = getOrCreateObject(root, KEY_ARMOR_ROOT);
 		JsonObject armorCaps = getOrCreateObject(armorRoot, KEY_ARMOR_CAPS);
+		JsonObject toolsRoot = getOrCreateObject(root, KEY_TOOLS_ROOT);
 		JsonObject compatMobsRoot = getOrCreateObject(root, KEY_COMPAT_MOBS_ROOT);
 		JsonObject scalingRoot = getOrCreateObject(compatMobsRoot, KEY_DIFFICULTY_SCALING);
 		JsonObject creeper = getOrCreateObject(scalingRoot, KEY_CREEPER);
@@ -112,6 +141,15 @@ public final class CompatConfigSystem {
 				DEFAULT_ARMOR_TOUGHNESS_MAX);
 		changed |= setDouble(armorCaps, KEY_ARMOR_MAX_VALUE, armorMax);
 		changed |= setDouble(armorCaps, KEY_ARMOR_TOUGHNESS_MAX_VALUE, armorToughnessMax);
+
+		boolean toolsArmorDefaultsMigrationPending = readBoolean(
+				toolsRoot,
+				KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING,
+				true);
+		changed |= setBoolean(
+				toolsRoot,
+				KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING,
+				toolsArmorDefaultsMigrationPending);
 
 		double creeperFuseStep = sanitizeNonNegative(
 				readDouble(creeper, KEY_CREEPER_FUSE_LENGTH_STEP, DEFAULT_CREEPER_FUSE_LENGTH_STEP),
@@ -154,7 +192,8 @@ public final class CompatConfigSystem {
 								spiderScaleStep,
 								skeletonAttackIntervalStep,
 								skeletonRangedAttackStep,
-								skeletonAttackAccuracyStep)),
+								skeletonAttackAccuracyStep),
+						new ToolsSettings(toolsArmorDefaultsMigrationPending)),
 				changed);
 	}
 
@@ -190,6 +229,25 @@ public final class CompatConfigSystem {
 		return true;
 	}
 
+	private static boolean readBoolean(JsonObject root, String key, boolean fallback) {
+		JsonElement element = root.get(key);
+		if (element instanceof JsonPrimitive primitive && primitive.isBoolean()) {
+			return primitive.getAsBoolean();
+		}
+		return fallback;
+	}
+
+	private static boolean setBoolean(JsonObject root, String key, boolean value) {
+		JsonElement element = root.get(key);
+		if (element instanceof JsonPrimitive primitive && primitive.isBoolean()) {
+			if (primitive.getAsBoolean() == value) {
+				return false;
+			}
+		}
+		root.addProperty(key, value);
+		return true;
+	}
+
 	private static double sanitizePositive(double value, double fallback) {
 		return Double.isFinite(value) && value > 0.0d ? value : fallback;
 	}
@@ -198,7 +256,7 @@ public final class CompatConfigSystem {
 		return Double.isFinite(value) && value >= 0.0d ? value : fallback;
 	}
 
-	public record Snapshot(ArmorSettings armor, MobCompatScalingSettings mobCompatScaling) {
+	public record Snapshot(ArmorSettings armor, MobCompatScalingSettings mobCompatScaling, ToolsSettings tools) {
 		private static Snapshot defaults() {
 			return new Snapshot(
 					new ArmorSettings(DEFAULT_ARMOR_MAX, DEFAULT_ARMOR_TOUGHNESS_MAX),
@@ -208,7 +266,8 @@ public final class CompatConfigSystem {
 							DEFAULT_SPIDER_SCALE_STEP,
 							DEFAULT_SKELETON_ATTACK_INTERVAL_STEP,
 							DEFAULT_SKELETON_RANGED_ATTACK_STEP,
-							DEFAULT_SKELETON_ATTACK_ACCURACY_STEP));
+							DEFAULT_SKELETON_ATTACK_ACCURACY_STEP),
+					new ToolsSettings(true));
 		}
 	}
 
@@ -222,6 +281,9 @@ public final class CompatConfigSystem {
 			double skeletonAttackIntervalAdjustmentStep,
 			double skeletonRangedAttackAdjustmentStep,
 			double skeletonAttackAccuracyAdjustmentStep) {
+	}
+
+	public record ToolsSettings(boolean armorDefaultsMigrationPending) {
 	}
 
 	private record SettingsLoadResult(Snapshot snapshot, boolean changed) {
