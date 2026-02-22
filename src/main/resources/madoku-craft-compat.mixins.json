@@ -9,6 +9,11 @@
 		"health.MadokuHealthManagerCompatMixin",
 		"hunger.HungerFeatureAccessor",
 		"hunger.HungerFeatureCompatMixin",
+		"mobs.CreeperMobSystemDifficultyCompatMixin",
+		"mobs.PersistentProjectileEntityDamageCompatMixin",
+		"mobs.SkeletonMobSystemDifficultyCompatMixin",
+		"mobs.SpiderMobSystemDifficultyCompatMixin",
+		"mobs.ZombieMobSystemDifficultyCompatMixin",
 		"tools.ToolRarityManagerCompatMixin",
 		"tools.CustomToolsConfigCompatMixin"
 	],

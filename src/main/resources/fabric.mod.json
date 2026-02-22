@@ -42,6 +42,8 @@
 		"madoku-craft-armor": "*",
 		"madoku-craft-smelting": "*",
 		"madoku-craft-tools": "*",
-		"madoku-craft-hud": "*"
+		"madoku-craft-hud": "*",
+		"madoku-craft-mobs": "*",
+		"madoku-craft-difficulty": "*"
 	}
 }

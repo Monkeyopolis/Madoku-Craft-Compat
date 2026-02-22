@@ -1,6 +1,7 @@
 package madoku.craft.compat;
 
 import madoku.craft.compat.system.ArmorAttributeLimitSystem;
+import madoku.craft.compat.system.CompatConfigSystem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -17,6 +18,8 @@ public class MadokuCraftCompat implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		CompatConfigSystem.init();
+
 		boolean armorLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-armor");
 		boolean toolsLoaded = FabricLoader.getInstance().isModLoaded("madoku-craft-tools");
 		if (armorLoaded && toolsLoaded) {

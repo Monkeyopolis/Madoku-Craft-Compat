@@ -2,6 +2,7 @@ package madoku.craft.compat.mixin.armor;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,7 +16,8 @@ public class CustomArmorSystemCompatMixin {
 	private static final double TOUGHNESS_PERCENT_REDUCTION = 0.0025d;
 
 	@Inject(method = "applyCustomArmor", at = @At("HEAD"), cancellable = true, remap = false)
-	private static void madokuCraftCompat$applyAdjustedArmorFormula(LivingEntity entity, float amount,
+	private static void madokuCraftCompat$applyAdjustedArmorFormula(LivingEntity entity, DamageSource damageSource,
+			float amount,
 			CallbackInfoReturnable<Float> cir) {
 		double armorPoints = roundToStep(entity.getAttributeValue(EntityAttributes.ARMOR), ARMOR_POINT_STEP);
 		double armorToughnessPoints = roundToStep(

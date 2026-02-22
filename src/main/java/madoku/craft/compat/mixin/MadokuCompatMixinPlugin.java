@@ -14,6 +14,8 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 	private boolean armorLoaded;
 	private boolean toolsLoaded;
 	private boolean hudLoaded;
+	private boolean mobsLoaded;
+	private boolean difficultyLoaded;
 
 	@Override
 	public void onLoad(String mixinPackage) {
@@ -23,6 +25,8 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		armorLoaded = loader.isModLoaded("madoku-craft-armor");
 		toolsLoaded = loader.isModLoaded("madoku-craft-tools");
 		hudLoaded = loader.isModLoaded("madoku-craft-hud");
+		mobsLoaded = loader.isModLoaded("madoku-craft-mobs");
+		difficultyLoaded = loader.isModLoaded("madoku-craft-difficulty");
 	}
 
 	@Override
@@ -61,6 +65,24 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		}
 		if (mixinClassName.endsWith("ArmorHudSystemCompatMixin")) {
 			return hudLoaded && armorLoaded;
+		}
+		if (mixinClassName.endsWith("WorldHudSystemCompatMixin")) {
+			return hudLoaded && difficultyLoaded;
+		}
+		if (mixinClassName.endsWith("CreeperMobSystemDifficultyCompatMixin")) {
+			return mobsLoaded && difficultyLoaded;
+		}
+		if (mixinClassName.endsWith("PersistentProjectileEntityDamageCompatMixin")) {
+			return mobsLoaded && difficultyLoaded;
+		}
+		if (mixinClassName.endsWith("SkeletonMobSystemDifficultyCompatMixin")) {
+			return mobsLoaded && difficultyLoaded;
+		}
+		if (mixinClassName.endsWith("SpiderMobSystemDifficultyCompatMixin")) {
+			return mobsLoaded && difficultyLoaded;
+		}
+		if (mixinClassName.endsWith("ZombieMobSystemDifficultyCompatMixin")) {
+			return mobsLoaded && difficultyLoaded;
 		}
 		return true;
 	}

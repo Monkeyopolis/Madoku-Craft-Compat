@@ -6,7 +6,8 @@
 	"client": [
 		"hud.ArmorHudSystemCompatMixin",
 		"hud.HungerClientStateCompatMixin",
-		"hud.HungerHudSystemCompatMixin"
+		"hud.HungerHudSystemCompatMixin",
+		"hud.WorldHudSystemCompatMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
