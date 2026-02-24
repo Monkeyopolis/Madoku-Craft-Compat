@@ -9,10 +9,6 @@ public final class CompatConfigSystem {
 	private static final String FEATURE_ID = "madoku_craft_compat";
 	private static final String JSON_FOLDER_ID = "Compat";
 
-	private static final String KEY_ARMOR_ROOT = "madoku_craft_armor";
-	private static final String KEY_ARMOR_CAPS = "attribute_caps";
-	private static final String KEY_ARMOR_MAX_VALUE = "armor_max_value";
-	private static final String KEY_ARMOR_TOUGHNESS_MAX_VALUE = "armor_toughness_max_value";
 	private static final String KEY_TOOLS_ROOT = "madoku_craft_tools";
 	private static final String KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING = "armor_defaults_migration_pending";
 
@@ -28,8 +24,6 @@ public final class CompatConfigSystem {
 	private static final String KEY_SKELETON_RANGED_ATTACK_STEP = "ranged_attack";
 	private static final String KEY_SKELETON_ATTACK_ACCURACY_STEP = "attack_accuracy";
 
-	private static final double DEFAULT_ARMOR_MAX = 100.0d;
-	private static final double DEFAULT_ARMOR_TOUGHNESS_MAX = 100.0d;
 	private static final double DEFAULT_CREEPER_FUSE_LENGTH_STEP = 0.05d;
 	private static final double DEFAULT_CREEPER_EXPLOSION_DESTRUCTION_CHANCE_STEP = 0.025d;
 	private static final double DEFAULT_SPIDER_SCALE_STEP = 0.025d;
@@ -79,19 +73,12 @@ public final class CompatConfigSystem {
 		}
 
 		Snapshot current = snapshot;
-		snapshot = new Snapshot(current.armor(), current.mobCompatScaling(), new ToolsSettings(false));
+		snapshot = new Snapshot(current.mobCompatScaling(), new ToolsSettings(false));
 		initialized = true;
 	}
 
 	private static JsonObject buildDefaults() {
 		JsonObject root = new JsonObject();
-
-		JsonObject armorRoot = new JsonObject();
-		JsonObject armorCaps = new JsonObject();
-		armorCaps.addProperty(KEY_ARMOR_MAX_VALUE, DEFAULT_ARMOR_MAX);
-		armorCaps.addProperty(KEY_ARMOR_TOUGHNESS_MAX_VALUE, DEFAULT_ARMOR_TOUGHNESS_MAX);
-		armorRoot.add(KEY_ARMOR_CAPS, armorCaps);
-		root.add(KEY_ARMOR_ROOT, armorRoot);
 
 		JsonObject toolsRoot = new JsonObject();
 		toolsRoot.addProperty(KEY_TOOLS_ARMOR_DEFAULTS_MIGRATION_PENDING, true);
@@ -126,21 +113,12 @@ public final class CompatConfigSystem {
 	private static SettingsLoadResult readSettings(JsonObject root) {
 		boolean changed = false;
 
-		JsonObject armorRoot = getOrCreateObject(root, KEY_ARMOR_ROOT);
-		JsonObject armorCaps = getOrCreateObject(armorRoot, KEY_ARMOR_CAPS);
 		JsonObject toolsRoot = getOrCreateObject(root, KEY_TOOLS_ROOT);
 		JsonObject compatMobsRoot = getOrCreateObject(root, KEY_COMPAT_MOBS_ROOT);
 		JsonObject scalingRoot = getOrCreateObject(compatMobsRoot, KEY_DIFFICULTY_SCALING);
 		JsonObject creeper = getOrCreateObject(scalingRoot, KEY_CREEPER);
 		JsonObject spider = getOrCreateObject(scalingRoot, KEY_SPIDER);
 		JsonObject skeleton = getOrCreateObject(scalingRoot, KEY_SKELETON);
-
-		double armorMax = sanitizePositive(readDouble(armorCaps, KEY_ARMOR_MAX_VALUE, DEFAULT_ARMOR_MAX), DEFAULT_ARMOR_MAX);
-		double armorToughnessMax = sanitizePositive(
-				readDouble(armorCaps, KEY_ARMOR_TOUGHNESS_MAX_VALUE, DEFAULT_ARMOR_TOUGHNESS_MAX),
-				DEFAULT_ARMOR_TOUGHNESS_MAX);
-		changed |= setDouble(armorCaps, KEY_ARMOR_MAX_VALUE, armorMax);
-		changed |= setDouble(armorCaps, KEY_ARMOR_TOUGHNESS_MAX_VALUE, armorToughnessMax);
 
 		boolean toolsArmorDefaultsMigrationPending = readBoolean(
 				toolsRoot,
@@ -185,7 +163,6 @@ public final class CompatConfigSystem {
 
 		return new SettingsLoadResult(
 				new Snapshot(
-						new ArmorSettings(armorMax, armorToughnessMax),
 						new MobCompatScalingSettings(
 								creeperFuseStep,
 								creeperExplosionDestructionChanceStep,
@@ -248,18 +225,13 @@ public final class CompatConfigSystem {
 		return true;
 	}
 
-	private static double sanitizePositive(double value, double fallback) {
-		return Double.isFinite(value) && value > 0.0d ? value : fallback;
-	}
-
 	private static double sanitizeNonNegative(double value, double fallback) {
 		return Double.isFinite(value) && value >= 0.0d ? value : fallback;
 	}
 
-	public record Snapshot(ArmorSettings armor, MobCompatScalingSettings mobCompatScaling, ToolsSettings tools) {
+	public record Snapshot(MobCompatScalingSettings mobCompatScaling, ToolsSettings tools) {
 		private static Snapshot defaults() {
 			return new Snapshot(
-					new ArmorSettings(DEFAULT_ARMOR_MAX, DEFAULT_ARMOR_TOUGHNESS_MAX),
 					new MobCompatScalingSettings(
 							DEFAULT_CREEPER_FUSE_LENGTH_STEP,
 							DEFAULT_CREEPER_EXPLOSION_DESTRUCTION_CHANCE_STEP,
@@ -269,9 +241,6 @@ public final class CompatConfigSystem {
 							DEFAULT_SKELETON_ATTACK_ACCURACY_STEP),
 					new ToolsSettings(true));
 		}
-	}
-
-	public record ArmorSettings(double armorMaxValue, double armorToughnessMaxValue) {
 	}
 
 	public record MobCompatScalingSettings(

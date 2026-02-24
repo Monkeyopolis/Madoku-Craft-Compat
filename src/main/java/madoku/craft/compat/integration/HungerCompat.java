@@ -1,6 +1,7 @@
 package madoku.craft.compat.integration;
 
 import madoku.craft.Health.system.MadokuHealthManager;
+import madoku.craft.Hunger.system.HungerConfig;
 import madoku.craft.Hunger.system.HungerFeature;
 import madoku.craft.Hunger.system.PlayerHungerData;
 import madoku.craft.compat.mixin.hunger.HungerFeatureAccessor;
@@ -27,7 +28,11 @@ public final class HungerCompat {
 		if (data == null) {
 			return false;
 		}
-		int max = accessor.madokuCompat$calculateMaxHunger(player);
+		HungerConfig config = accessor.madokuCompat$getConfig();
+		if (config == null) {
+			return false;
+		}
+		int max = accessor.madokuCompat$toHungerUnits(config.maximumHungerPoints);
 		int foodLevel = toVanillaFoodLevel(data.currentHungerPoints, max);
 		applyVanillaFoodLevel(player, foodLevel);
 		return true;

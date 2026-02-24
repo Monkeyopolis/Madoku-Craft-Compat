@@ -54,9 +54,6 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		if (mixinClassName.endsWith("ToolRarityManagerCompatMixin")) {
 			return armorLoaded && toolsLoaded;
 		}
-		if (mixinClassName.endsWith("ClampedEntityAttributeAccessor")) {
-			return armorLoaded && toolsLoaded;
-		}
 		if (mixinClassName.endsWith("HungerHudSystemCompatMixin")) {
 			return hudLoaded && hungerLoaded;
 		}
@@ -68,6 +65,9 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 		}
 		if (mixinClassName.endsWith("WorldHudSystemCompatMixin")) {
 			return hudLoaded && difficultyLoaded;
+		}
+		if (mixinClassName.endsWith("MobEntityExperienceDropCompatMixin")) {
+			return mobsLoaded && difficultyLoaded;
 		}
 		if (mixinClassName.endsWith("CreeperMobSystemDifficultyCompatMixin")) {
 			return mobsLoaded && difficultyLoaded;

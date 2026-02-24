@@ -47,24 +47,22 @@ public class CreeperMobSystemDifficultyCompatMixin {
 		CURRENT_CREEPER.remove();
 	}
 
-	@ModifyArg(
-			method = "applyConfig",
-			at = @At(
-					value = "INVOKE",
-					target = "Lmadoku/craft/mobs/system/CreeperMobSystem;resolveFuseTicks(D)I"
-			),
-			index = 0
-	)
-	private static double madokuCompat$applyDifficultyFuseScaling(double baseFuseLengthSeconds) {
+	@Inject(method = "resolveScaledFuseLength", at = @At("RETURN"), cancellable = true)
+	private static void madokuCompat$applyDifficultyFuseScaling(
+			double baseFuseLengthSeconds,
+			Difficulty difficulty,
+			boolean hardcore,
+			CallbackInfoReturnable<Double> cir
+	) {
 		int spawnAdjustment = resolveSpawnAdjustment(CURRENT_CREEPER.get());
 		if (spawnAdjustment <= 0) {
-			return baseFuseLengthSeconds;
+			return;
 		}
 		double step = CompatConfigSystem.get().mobCompatScaling().creeperFuseLengthAdjustmentStep();
-		return Math.max(
+		cir.setReturnValue(Math.max(
 				MIN_FUSE_LENGTH_SECONDS,
-				baseFuseLengthSeconds - (spawnAdjustment * step)
-		);
+				cir.getReturnValueD() - (spawnAdjustment * step)
+		));
 	}
 
 	@Inject(method = "applyExplosionOverride", at = @At("HEAD"))

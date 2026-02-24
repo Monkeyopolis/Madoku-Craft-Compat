@@ -16,11 +16,11 @@ public interface HungerFeatureAccessor {
 	@Invoker("getPlayerData")
 	PlayerHungerData madokuCompat$getPlayerData(ServerPlayerEntity player);
 
-	@Invoker("calculateMaxHunger")
-	int madokuCompat$calculateMaxHunger(ServerPlayerEntity player);
-
 	@Invoker("toHungerUnits")
 	int madokuCompat$toHungerUnits(int points);
+
+	@Invoker("toHungerUnits")
+	int madokuCompat$toHungerUnits(double points);
 
 	@Invoker("markDirty")
 	void madokuCompat$markDirty();

@@ -35,7 +35,7 @@ public class HungerFeatureCompatMixin {
 			return;
 		}
 
-		int max = accessor.madokuCompat$calculateMaxHunger(player);
+		int max = accessor.madokuCompat$toHungerUnits(config.maximumHungerPoints);
 		int availableUnits = Math.max(0, max - data.currentHungerPoints - data.pendingHungerPoints);
 		int unitsPerNutrition = Math.max(1, accessor.madokuCompat$toHungerUnits(1));
 		int added = Math.min(nutrition, availableUnits / unitsPerNutrition);

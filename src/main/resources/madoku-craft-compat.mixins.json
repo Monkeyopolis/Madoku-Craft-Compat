@@ -5,10 +5,10 @@
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"armor.CustomArmorSystemCompatMixin",
-		"attribute.ClampedEntityAttributeAccessor",
 		"health.MadokuHealthManagerCompatMixin",
 		"hunger.HungerFeatureAccessor",
 		"hunger.HungerFeatureCompatMixin",
+		"difficulty.MobEntityExperienceDropCompatMixin",
 		"mobs.CreeperMobSystemDifficultyCompatMixin",
 		"mobs.PersistentProjectileEntityDamageCompatMixin",
 		"mobs.SkeletonMobSystemDifficultyCompatMixin",
