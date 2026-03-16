@@ -37,13 +37,10 @@
 		"madoku-craft-api": ">=${madoku_craft_api_mod_version}"
 	},
 	"suggests": {
-		"madoku-craft-hunger": "*",
-		"madoku-craft-health": "*",
-		"madoku-craft-armor": "*",
+		"madoku-craft-items": "*",
 		"madoku-craft-smelting": "*",
-		"madoku-craft-tools": "*",
 		"madoku-craft-hud": "*",
-		"madoku-craft-mobs": "*",
-		"madoku-craft-difficulty": "*"
+		"madoku-craft-attributes": "*",
+		"madoku-craft-mobs": "*"
 	}
 }

@@ -4,23 +4,10 @@
 	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"armor.CustomArmorSystemCompatMixin",
-		"health.MadokuHealthManagerCompatMixin",
-		"hunger.HungerFeatureAccessor",
-		"hunger.HungerFeatureCompatMixin",
-		"difficulty.MobEntityExperienceDropCompatMixin",
-		"mobs.CreeperMobSystemDifficultyCompatMixin",
-		"mobs.PersistentProjectileEntityDamageCompatMixin",
-		"mobs.SkeletonMobSystemDifficultyCompatMixin",
-		"mobs.SpiderMobSystemDifficultyCompatMixin",
-		"mobs.ZombieMobSystemDifficultyCompatMixin",
-		"tools.ToolRarityManagerCompatMixin",
-		"tools.CustomToolsConfigCompatMixin"
+		"attributes.HungerStateSyncCompatMixin",
+		"smelting.FurnaceFuelItemsSmeltingCompatMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
-	},
-	"overwrites": {
-		"requireAnnotations": true
 	}
 }

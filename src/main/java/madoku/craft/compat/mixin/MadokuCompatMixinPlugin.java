@@ -9,24 +9,20 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
-	private boolean hungerLoaded;
-	private boolean healthLoaded;
-	private boolean armorLoaded;
-	private boolean toolsLoaded;
 	private boolean hudLoaded;
+	private boolean attributesLoaded;
 	private boolean mobsLoaded;
-	private boolean difficultyLoaded;
+	private boolean itemsLoaded;
+	private boolean smeltingLoaded;
 
 	@Override
 	public void onLoad(String mixinPackage) {
 		FabricLoader loader = FabricLoader.getInstance();
-		hungerLoaded = loader.isModLoaded("madoku-craft-hunger");
-		healthLoaded = loader.isModLoaded("madoku-craft-health");
-		armorLoaded = loader.isModLoaded("madoku-craft-armor");
-		toolsLoaded = loader.isModLoaded("madoku-craft-tools");
 		hudLoaded = loader.isModLoaded("madoku-craft-hud");
+		attributesLoaded = loader.isModLoaded("madoku-craft-attributes");
 		mobsLoaded = loader.isModLoaded("madoku-craft-mobs");
-		difficultyLoaded = loader.isModLoaded("madoku-craft-difficulty");
+		itemsLoaded = loader.isModLoaded("madoku-craft-items");
+		smeltingLoaded = loader.isModLoaded("madoku-craft-smelting");
 	}
 
 	@Override
@@ -36,53 +32,20 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		if (mixinClassName.endsWith("HungerFeatureCompatMixin")) {
-			return hungerLoaded && healthLoaded;
+		if (mixinClassName.endsWith("HungerStateSyncCompatMixin")) {
+			return hudLoaded && attributesLoaded;
 		}
-		if (mixinClassName.endsWith("HungerFeatureAccessor")) {
-			return hungerLoaded && healthLoaded;
+		if (mixinClassName.endsWith("HungerHudAttributesCompatMixin")) {
+			return hudLoaded && attributesLoaded;
 		}
-		if (mixinClassName.endsWith("MadokuHealthManagerCompatMixin")) {
-			return hungerLoaded && healthLoaded;
+		if (mixinClassName.endsWith("OxygenHudAttributesCompatMixin")) {
+			return hudLoaded && attributesLoaded;
 		}
-		if (mixinClassName.endsWith("CustomArmorSystemCompatMixin")) {
-			return armorLoaded && toolsLoaded;
+		if (mixinClassName.endsWith("WorldHudMobsDifficultyCompatMixin")) {
+			return hudLoaded && mobsLoaded;
 		}
-		if (mixinClassName.endsWith("CustomToolsConfigCompatMixin")) {
-			return armorLoaded && toolsLoaded;
-		}
-		if (mixinClassName.endsWith("ToolRarityManagerCompatMixin")) {
-			return armorLoaded && toolsLoaded;
-		}
-		if (mixinClassName.endsWith("HungerHudSystemCompatMixin")) {
-			return hudLoaded && hungerLoaded;
-		}
-		if (mixinClassName.endsWith("HungerClientStateCompatMixin")) {
-			return hudLoaded && hungerLoaded;
-		}
-		if (mixinClassName.endsWith("ArmorHudSystemCompatMixin")) {
-			return hudLoaded && armorLoaded;
-		}
-		if (mixinClassName.endsWith("WorldHudSystemCompatMixin")) {
-			return hudLoaded && difficultyLoaded;
-		}
-		if (mixinClassName.endsWith("MobEntityExperienceDropCompatMixin")) {
-			return mobsLoaded && difficultyLoaded;
-		}
-		if (mixinClassName.endsWith("CreeperMobSystemDifficultyCompatMixin")) {
-			return mobsLoaded && difficultyLoaded;
-		}
-		if (mixinClassName.endsWith("PersistentProjectileEntityDamageCompatMixin")) {
-			return mobsLoaded && difficultyLoaded;
-		}
-		if (mixinClassName.endsWith("SkeletonMobSystemDifficultyCompatMixin")) {
-			return mobsLoaded && difficultyLoaded;
-		}
-		if (mixinClassName.endsWith("SpiderMobSystemDifficultyCompatMixin")) {
-			return mobsLoaded && difficultyLoaded;
-		}
-		if (mixinClassName.endsWith("ZombieMobSystemDifficultyCompatMixin")) {
-			return mobsLoaded && difficultyLoaded;
+		if (mixinClassName.endsWith("FurnaceFuelItemsSmeltingCompatMixin")) {
+			return itemsLoaded && smeltingLoaded;
 		}
 		return true;
 	}
@@ -97,12 +60,10 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 	}
 
 	@Override
-	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName,
-			IMixinInfo mixinInfo) {
+	public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
 	}
 
 	@Override
-	public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName,
-			IMixinInfo mixinInfo) {
+	public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
 	}
 }
