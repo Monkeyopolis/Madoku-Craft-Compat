@@ -6,6 +6,8 @@
 	"client": [
 		"hud.HungerHudAttributesCompatMixin",
 		"hud.ItemFoodAttributesCompatMixin",
+		"levels.LevelsClientOpenAttributesCompatMixin",
+		"levels.LevelsClientStateAttributesCompatMixin",
 		"hud.OxygenHudAttributesCompatMixin",
 		"hud.PlayerEatAttributesCompatMixin",
 		"hud.WorldHudMobsDifficultyCompatMixin"

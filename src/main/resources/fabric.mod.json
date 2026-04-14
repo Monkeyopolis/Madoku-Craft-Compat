@@ -3,13 +3,12 @@
 	"id": "madoku-craft-compat",
 	"version": "${version}",
 	"name": "Madoku Craft Compat",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "A Compat MOD for the Madoku Craft ecosystem.",
 	"authors": [
-		"Me!"
+		"Monkeyopolis"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/Monkeyopolis/Madoku-Craft-Compat"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/madoku-craft-compat/icon.png",

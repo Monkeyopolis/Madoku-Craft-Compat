@@ -4,9 +4,17 @@
 	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"attributes.HungerHudSyncAttributesCompatMixin",
+		"attributes.MadokuLuckFarmingCompatMixin",
+		"farming.BlockFarmingAttributesCompatMixin",
 		"farming.FarmingItemsMetadataCompatMixin",
 		"levels.LevelsAttributesConfigCompatMixin",
+		"levels.LevelsAttributesExtraStatsCompatMixin",
+		"levels.HungerLevelsAttributesCompatMixin",
+		"mobs.MadokuDifficultyConfigPetsHagCompatMixin",
+		"mobs.MadokuLuckMobsConfigCompatMixin",
+		"mobs.MadokuMobConfigPetsHagCompatMixin",
+		"mobs.MadokuMobAttributesLuckCompatMixin",
+		"mobs.MadokuMobPetsHagCompatMixin",
 		"smelting.FuelValuesItemsSmeltingCompatMixin",
 		"smelting.FurnaceFuelItemsSmeltingCompatMixin"
 	],
