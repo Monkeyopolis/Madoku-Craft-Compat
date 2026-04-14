@@ -1,6 +1,9 @@
 package madoku.craft.compat;
 
-import madoku.craft.compat.integration.hud.MobsHudDifficultySync;
+import madoku.craft.compat.integration.hud.HungerHudSync;
+import madoku.craft.compat.integration.hud.WorldDifficultySync;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
@@ -13,9 +16,19 @@ public class MadokuCraftCompat implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		FabricLoader loader = FabricLoader.getInstance();
+		if (loader.isModLoaded("madoku-craft-hud") && loader.isModLoaded("madoku-craft-attributes")) {
+			HungerHudSync.initialize();
+			LOGGER.info("Madoku Craft Compat: HUD/Attributes hunger sync initialized.");
+		}
 		if (loader.isModLoaded("madoku-craft-mobs")) {
-			MobsHudDifficultySync.initialize();
-			LOGGER.info("Madoku Craft Compat: Mobs difficulty HUD sync initialized.");
+			WorldDifficultySync.initialize();
+			ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+				WorldDifficultySync.reset();
+				WorldDifficultySync.broadcastNow(server);
+			});
+			ServerLifecycleEvents.SERVER_STOPPED.register(server -> WorldDifficultySync.reset());
+			ServerTickEvents.END_SERVER_TICK.register(WorldDifficultySync::broadcastIfChanged);
+			LOGGER.info("Madoku Craft Compat: HUD/Mobs world difficulty sync initialized.");
 		}
 	}
 }

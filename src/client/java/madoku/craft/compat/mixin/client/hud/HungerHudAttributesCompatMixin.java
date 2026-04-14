@@ -4,7 +4,7 @@ import com.mojang.blaze3d.pipeline.RenderPipeline;
 import madoku.craft.compat.integration.HungerHudClientState;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffects;
@@ -42,7 +42,7 @@ public class HungerHudAttributesCompatMixin {
 	}
 
 	@Shadow
-	private static int computeFoodX(GuiGraphics context, Minecraft client, String hungerText, int configuredMax) {
+	private static int computeFoodX(GuiGraphicsExtractor context, Minecraft client, String hungerText, int configuredMax) {
 		throw new AssertionError();
 	}
 
@@ -55,7 +55,7 @@ public class HungerHudAttributesCompatMixin {
 			cancellable = true
 	)
 	private static void madokuCompat$renderSyncedHunger(
-			GuiGraphics context,
+			GuiGraphicsExtractor context,
 			DeltaTracker tickCounter,
 			net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement oldElement,
 			CallbackInfo ci) {
@@ -93,7 +93,7 @@ public class HungerHudAttributesCompatMixin {
 		int textY = foodY + 1;
 		context.pose().pushMatrix();
 		context.pose().scale(HUNGER_TEXT_SCALE, HUNGER_TEXT_SCALE);
-		context.drawString(
+		context.text(
 				client.font,
 				hungerText,
 				Math.round(textX / HUNGER_TEXT_SCALE),

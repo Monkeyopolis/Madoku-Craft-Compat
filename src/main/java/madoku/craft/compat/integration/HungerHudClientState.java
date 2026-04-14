@@ -31,4 +31,15 @@ public final class HungerHudClientState {
 	public static int max() {
 		return max;
 	}
+
+	public static boolean canConsume(boolean ignoreHunger) {
+		if (ignoreHunger) {
+			return true;
+		}
+		if (max <= 0) {
+			return true;
+		}
+		long total = (long) Math.max(0, current) + (long) Math.max(0, pending);
+		return total < Math.max(1, max);
+	}
 }

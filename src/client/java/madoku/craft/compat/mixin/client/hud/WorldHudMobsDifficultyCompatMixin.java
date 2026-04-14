@@ -1,9 +1,9 @@
 package madoku.craft.compat.mixin.client.hud;
 
-import madoku.craft.compat.integration.hud.MobsHudDifficultyClientState;
+import madoku.craft.compat.integration.hud.WorldDifficultyClientState;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,7 +18,7 @@ public class WorldHudMobsDifficultyCompatMixin {
 	}
 
 	@Shadow
-	private static void drawScaledString(GuiGraphics context, Minecraft client, String text, int x, int y, int color) {
+	private static void drawScaledString(GuiGraphicsExtractor context, Minecraft client, String text, int x, int y, int color) {
 		throw new AssertionError();
 	}
 
@@ -26,18 +26,18 @@ public class WorldHudMobsDifficultyCompatMixin {
 			method = "renderWorldHud",
 			at = @At(
 					value = "INVOKE",
-					target = "Lmadoku/craft/hud/MadokuHud;drawScaledString(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/Minecraft;Ljava/lang/String;III)V",
+					target = "Lmadoku/craft/hud/MadokuHud;drawScaledString(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/Minecraft;Ljava/lang/String;III)V",
 					ordinal = 2,
 					shift = At.Shift.AFTER
 			)
 	)
-	private static void madokuCompat$renderMobsDifficultyLine(GuiGraphics context, DeltaTracker tickCounter, CallbackInfo ci) {
+	private static void madokuCompat$renderMobsDifficultyLine(GuiGraphicsExtractor context, DeltaTracker tickCounter, CallbackInfo ci) {
 		Minecraft client = Minecraft.getInstance();
 		int fourthLineY = lineOffset(client, 3);
 		drawScaledString(
 				context,
 				client,
-				"Difficulty: " + MobsHudDifficultyClientState.displayText(),
+				"Difficulty: " + WorldDifficultyClientState.displayText(),
 				4,
 				fourthLineY,
 				0xFFFFFFFF

@@ -4,7 +4,10 @@
 	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"attributes.HungerStateSyncCompatMixin",
+		"attributes.HungerHudSyncAttributesCompatMixin",
+		"farming.FarmingItemsMetadataCompatMixin",
+		"levels.LevelsAttributesConfigCompatMixin",
+		"smelting.FuelValuesItemsSmeltingCompatMixin",
 		"smelting.FurnaceFuelItemsSmeltingCompatMixin"
 	],
 	"injectors": {

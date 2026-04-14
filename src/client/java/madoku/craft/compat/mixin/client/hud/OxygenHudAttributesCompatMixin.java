@@ -17,4 +17,15 @@ public class OxygenHudAttributesCompatMixin {
 	private static int madokuCompat$useAttributesOxygenCap(LocalPlayer player) {
 		return Math.max(1, madoku.craft.oxygen.MadokuOxygen.getMaximumOxygenTicksForEntity(player));
 	}
+
+	@Redirect(
+			method = "renderOxygenHud",
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/player/LocalPlayer;getMaxAirSupply()I"
+			)
+	)
+	private static int madokuCompat$renderUsingAttributesOxygenCap(LocalPlayer player) {
+		return Math.max(1, madoku.craft.oxygen.MadokuOxygen.getMaximumOxygenTicksForEntity(player));
+	}
 }

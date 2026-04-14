@@ -1,23 +1,25 @@
 package madoku.craft.compat.integration.hud;
 
+import madoku.craft.compat.integration.HungerHudClientState;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
-public final class MobsHudDifficultySyncClient {
+public final class HungerHudSyncClient {
 	private static boolean initialized = false;
 
-	private MobsHudDifficultySyncClient() {
+	private HungerHudSyncClient() {
 	}
 
 	public static void initialize() {
 		if (initialized) {
 			return;
 		}
+
 		ClientPlayNetworking.registerGlobalReceiver(
-				MobsHudDifficultyPayload.TYPE,
-				(payload, context) -> MobsHudDifficultyClientState.update(payload.level())
+			HungerHudPayload.TYPE,
+			(payload, context) -> HungerHudClientState.update(payload.current(), payload.pending(), payload.max())
 		);
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> MobsHudDifficultyClientState.clear());
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> HungerHudClientState.clear());
 		initialized = true;
 	}
 }

@@ -5,7 +5,9 @@
 	"compatibilityLevel": "JAVA_21",
 	"client": [
 		"hud.HungerHudAttributesCompatMixin",
+		"hud.ItemFoodAttributesCompatMixin",
 		"hud.OxygenHudAttributesCompatMixin",
+		"hud.PlayerEatAttributesCompatMixin",
 		"hud.WorldHudMobsDifficultyCompatMixin"
 	],
 	"injectors": {

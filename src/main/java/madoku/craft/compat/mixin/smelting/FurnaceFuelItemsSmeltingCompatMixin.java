@@ -4,30 +4,44 @@ import madoku.craft.items.item.system.MadokuItem;
 import madoku.craft.smelting.system.MadokuSmeltingManager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.FuelValues;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(value = AbstractFurnaceBlockEntity.class, priority = 500)
 public abstract class FurnaceFuelItemsSmeltingCompatMixin {
-	@Inject(method = "getBurnDuration", at = @At("RETURN"), cancellable = true)
-	private void madokuCompat$applyItemsThenSmeltingFuel(
-		FuelValues fuelValues,
-		ItemStack stack,
-		CallbackInfoReturnable<Integer> cir
-	) {
-		if (!MadokuItem.isEnabled() || !MadokuSmeltingManager.isEnabled()) {
-			return;
+	@Redirect(
+		method = "getBurnDuration",
+		at = @At(
+			value = "INVOKE",
+			target = "Lmadoku/craft/items/item/system/MadokuItem;adjustFuelTicks(Lnet/minecraft/world/item/ItemStack;I)I"
+		)
+	)
+	private int madokuCompat$combineItemsAndSmeltingFuel(ItemStack stack, int originalFuelTicks) {
+		int itemsFuelTicks = MadokuItem.adjustFuelTicks(stack, originalFuelTicks);
+		if (!MadokuSmeltingManager.isEnabled() || stack == null || stack.isEmpty()) {
+			return itemsFuelTicks;
 		}
 
 		AbstractFurnaceBlockEntity self = (AbstractFurnaceBlockEntity) (Object) this;
-		int vanillaFuelTicks = fuelValues.burnDuration(stack);
-		int itemsFuelTicks = MadokuItem.adjustFuelTicks(stack, vanillaFuelTicks);
-		int adjustedFuelTicks = MadokuSmeltingManager.getAdjustedFuelTicks(self, stack, itemsFuelTicks);
-		if (adjustedFuelTicks != cir.getReturnValue()) {
-			cir.setReturnValue(adjustedFuelTicks);
+		return MadokuSmeltingManager.getAdjustedFuelTicks(self, stack, itemsFuelTicks);
+	}
+
+	@Redirect(
+		method = "getBurnDuration",
+		at = @At(
+			value = "INVOKE",
+			target = "Lmadoku/craft/smelting/system/MadokuSmeltingManager;getAdjustedFuelTicks(Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;Lnet/minecraft/world/item/ItemStack;I)I"
+		)
+	)
+	private int madokuCompat$skipLegacySmeltingFuelAdjustment(
+		AbstractFurnaceBlockEntity furnace,
+		ItemStack stack,
+		int originalFuelTicks
+	) {
+		if (!MadokuItem.isEnabled()) {
+			return MadokuSmeltingManager.getAdjustedFuelTicks(furnace, stack, originalFuelTicks);
 		}
+		return originalFuelTicks;
 	}
 }
