@@ -2,6 +2,7 @@ package madoku.craft.compat.mixin.client.hud;
 
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import madoku.craft.compat.integration.HungerHudClientState;
+import madoku.craft.hunger.MadokuHunger;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -59,21 +60,20 @@ public class HungerHudAttributesCompatMixin {
 			DeltaTracker tickCounter,
 			net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement oldElement,
 			CallbackInfo ci) {
-		int syncedCurrent = HungerHudClientState.current();
-		int syncedMax = HungerHudClientState.max();
-		if (syncedCurrent < 0 || syncedMax <= 0) {
-			return;
-		}
-
 		Minecraft client = Minecraft.getInstance();
 		LocalPlayer player = client.player;
 		if (player == null) {
 			return;
 		}
 
-		int currentHunger = clampInt(syncedCurrent, 0, Math.max(1, syncedMax));
-		int pendingHunger = Math.max(0, HungerHudClientState.pending());
-		int maxHunger = Math.max(1, syncedMax);
+		int syncedCurrent = HungerHudClientState.current();
+		int syncedMax = HungerHudClientState.max();
+		int fallbackMax = Math.max(1, MadokuHunger.getConfiguredMaximumHungerPoints());
+		int fallbackCurrent = madokuCompat$fromVanillaFood(player.getFoodData().getFoodLevel(), fallbackMax);
+		int currentHunger = clampInt(syncedCurrent >= 0 ? syncedCurrent : fallbackCurrent, 0, Math.max(1, syncedMax > 0 ? syncedMax : fallbackMax));
+		int pendingHunger = Math.max(0, syncedCurrent >= 0 && syncedMax > 0 ? HungerHudClientState.pending() : 0);
+		int maxHunger = Math.max(1, syncedMax > 0 ? syncedMax : fallbackMax);
+		HungerHudClientState.update(currentHunger, pendingHunger, maxHunger);
 		float hungerPercent = currentHunger / (float) maxHunger;
 		long displayedHunger = (long) currentHunger + (long) pendingHunger;
 
@@ -107,5 +107,10 @@ public class HungerHudAttributesCompatMixin {
 
 	private static int clampInt(int value, int min, int max) {
 		return Math.max(min, Math.min(max, value));
+	}
+
+	private static int madokuCompat$fromVanillaFood(int vanillaFood, int maxHunger) {
+		int normalizedVanilla = clampInt(vanillaFood, 0, 20);
+		return clampInt(Math.round((normalizedVanilla / 20.0f) * Math.max(1, maxHunger)), 0, Math.max(1, maxHunger));
 	}
 }

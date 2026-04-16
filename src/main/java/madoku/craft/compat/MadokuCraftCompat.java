@@ -17,7 +17,9 @@ public class MadokuCraftCompat implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		FabricLoader loader = FabricLoader.getInstance();
-		if (loader.isModLoaded("madoku-craft-hud") && loader.isModLoaded("madoku-craft-attributes")) {
+		boolean attributesLoaded = loader.isModLoaded("madoku-craft-attributes");
+		boolean levelsLoaded = loader.isModLoaded("madoku-craft-levels");
+		if (loader.isModLoaded("madoku-craft-hud") && attributesLoaded) {
 			HungerHudSync.initialize();
 			LOGGER.info("Madoku Craft Compat: HUD/Attributes hunger sync initialized.");
 		}
@@ -31,7 +33,7 @@ public class MadokuCraftCompat implements ModInitializer {
 			ServerTickEvents.END_SERVER_TICK.register(WorldDifficultySync::broadcastIfChanged);
 			LOGGER.info("Madoku Craft Compat: HUD/Mobs world difficulty sync initialized.");
 		}
-		if (loader.isModLoaded("madoku-craft-levels") && loader.isModLoaded("madoku-craft-attributes")) {
+		if (levelsLoaded && attributesLoaded) {
 			ServerLifecycleEvents.SERVER_STARTED.register(LevelsAttributesExtraStats::loadPersistedData);
 			ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
 				LevelsAttributesExtraStats.savePersistedData(server);

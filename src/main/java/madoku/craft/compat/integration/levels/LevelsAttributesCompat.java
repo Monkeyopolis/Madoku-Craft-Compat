@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import madoku.craft.attributes.MadokuAttributes;
 import madoku.craft.config.StaticJsonSystem;
+import madoku.craft.hunger.MadokuHunger;
+import madoku.craft.luck.MadokuLuck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +19,18 @@ public final class LevelsAttributesCompat {
 
 	private static final String LEVELS_CONFIG_FOLDER_NAME = "madoku-craft-levels";
 	private static final String LEVELS_CONFIG_FILE_NAME = "madoku-levels";
+	private static final String MAX_PLAYER_LEVEL_KEY = "max_player_level";
+	private static final String MAX_PLAYER_LEVEL_ATTRIBUTES_KEY = "max_player_level_attributes";
+	private static final String MAX_PLAYER_LEVEL_ATTRIBUTES_PARTIAL_KEY = "max_player_level_attributes_partial";
+	private static final String MAX_PLAYER_LEVEL_VANILLA_KEY = "max_player_level_vanilla";
 	private static final String MAX_STAT_LEVEL_KEY = "max_stat_level";
 	private static final String MAX_STAT_LEVEL_ATTRIBUTES_KEY = "max_stat_level_attributes";
 	private static final String PLAYER_ARMOR_PER_LEVEL_KEY = "player_armor_per_level";
 	private static final String PLAYER_ARMOR_PER_LEVEL_ATTRIBUTES_KEY = "player_armor_per_level_attributes";
 
+	private static final int DEFAULT_MAX_PLAYER_LEVEL_ATTRIBUTES = 60;
+	private static final int DEFAULT_MAX_PLAYER_LEVEL_ATTRIBUTES_PARTIAL = 50;
+	private static final int DEFAULT_MAX_PLAYER_LEVEL_VANILLA = 40;
 	private static final int DEFAULT_MAX_STAT_LEVEL_ATTRIBUTES = 10;
 	private static final double DEFAULT_PLAYER_ARMOR_PER_LEVEL_ATTRIBUTES = 0.4d;
 
@@ -40,13 +49,20 @@ public final class LevelsAttributesCompat {
 		}
 
 		JsonObject source = readLevelsConfig();
+		int activeExtendedAttributeStats = activeExtendedAttributeStatCount();
 		int currentMaxStatLevel = readIntField(currentSettings, "maxStatLevel", DEFAULT_MAX_STAT_LEVEL_ATTRIBUTES);
+		int currentMaxPlayerLevel = readIntField(
+			currentSettings,
+			"maxPlayerLevel",
+			activeExtendedAttributeStats > 1 ? DEFAULT_MAX_PLAYER_LEVEL_ATTRIBUTES : DEFAULT_MAX_PLAYER_LEVEL_VANILLA
+		);
 		double currentArmorPerLevel = readDoubleField(
 			currentSettings,
 			"playerArmorPerLevel",
 			DEFAULT_PLAYER_ARMOR_PER_LEVEL_ATTRIBUTES
 		);
 
+		int attributeMaxPlayerLevel = resolveAttributeAwareMaxPlayerLevel(source, activeExtendedAttributeStats, currentMaxPlayerLevel);
 		int attributeMaxStatLevel = getInt(
 			source,
 			MAX_STAT_LEVEL_ATTRIBUTES_KEY,
@@ -58,10 +74,48 @@ public final class LevelsAttributesCompat {
 			getDouble(source, PLAYER_ARMOR_PER_LEVEL_KEY, currentArmorPerLevel)
 		);
 
-		Object compatSettings = recreateSettings(currentSettings, attributeMaxStatLevel, attributeArmorPerLevel);
+		Object compatSettings = recreateSettings(
+			currentSettings,
+			attributeMaxPlayerLevel,
+			attributeMaxStatLevel,
+			attributeArmorPerLevel
+		);
 		if (compatSettings != null) {
 			setCurrentSettings(compatSettings);
 		}
+	}
+
+	private static int activeExtendedAttributeStatCount() {
+		int count = 0;
+		if (MadokuHunger.isEnabled()) {
+			count++;
+		}
+		if (MadokuLuck.isEnabled()) {
+			count++;
+		}
+		return count;
+	}
+
+	private static int resolveAttributeAwareMaxPlayerLevel(JsonObject source, int activeExtendedAttributeStats, int currentMaxPlayerLevel) {
+		if (activeExtendedAttributeStats <= 0) {
+			return getInt(
+				source,
+				MAX_PLAYER_LEVEL_VANILLA_KEY,
+				getInt(source, MAX_PLAYER_LEVEL_KEY, Math.max(1, currentMaxPlayerLevel))
+			);
+		}
+		if (activeExtendedAttributeStats == 1) {
+			return getInt(
+				source,
+				MAX_PLAYER_LEVEL_ATTRIBUTES_PARTIAL_KEY,
+				DEFAULT_MAX_PLAYER_LEVEL_ATTRIBUTES_PARTIAL
+			);
+		}
+		return getInt(
+			source,
+			MAX_PLAYER_LEVEL_ATTRIBUTES_KEY,
+			DEFAULT_MAX_PLAYER_LEVEL_ATTRIBUTES
+		);
 	}
 
 	private static JsonObject readLevelsConfig() {
@@ -107,7 +161,7 @@ public final class LevelsAttributesCompat {
 		}
 	}
 
-	private static Object recreateSettings(Object currentSettings, int maxStatLevel, double playerArmorPerLevel) {
+	private static Object recreateSettings(Object currentSettings, int maxPlayerLevel, int maxStatLevel, double playerArmorPerLevel) {
 		try {
 			Class<?> settingsClass = currentSettings.getClass();
 			Constructor<?> constructor = settingsClass.getDeclaredConstructor(
@@ -124,7 +178,7 @@ public final class LevelsAttributesCompat {
 			return constructor.newInstance(
 				readDoubleField(currentSettings, "baseXpRequirement", 5.0d),
 				readDoubleField(currentSettings, "baseXpMultiplier", 0.10d),
-				readIntField(currentSettings, "maxPlayerLevel", 40),
+				Math.max(1, maxPlayerLevel),
 				maxStatLevel,
 				readDoubleField(currentSettings, "healthPerLevel", 1.0d),
 				readDoubleField(currentSettings, "playerDamagePerLevel", 0.2d),

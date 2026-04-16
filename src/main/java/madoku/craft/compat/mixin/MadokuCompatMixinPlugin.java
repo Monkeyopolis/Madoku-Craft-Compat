@@ -38,11 +38,14 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+		if (mixinClassName.endsWith("HungerHudAttributesCompatMixin")) {
+			return hudLoaded && attributesLoaded;
+		}
 		if (mixinClassName.endsWith("HungerHudSyncAttributesCompatMixin")) {
 			return hudLoaded && attributesLoaded;
 		}
-		if (mixinClassName.endsWith("HungerHudAttributesCompatMixin")) {
-			return hudLoaded && attributesLoaded;
+		if (mixinClassName.endsWith("HungerPlayerStateAccessor")) {
+			return attributesLoaded;
 		}
 		if (mixinClassName.endsWith("ItemFoodAttributesCompatMixin")) {
 			return hudLoaded && attributesLoaded;
@@ -90,6 +93,12 @@ public class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 			return levelsLoaded && attributesLoaded;
 		}
 		if (mixinClassName.endsWith("LevelsAttributesExtraStatsCompatMixin")) {
+			return levelsLoaded && attributesLoaded;
+		}
+		if (mixinClassName.endsWith("LevelsHealthAttributesCompatMixin")) {
+			return levelsLoaded && attributesLoaded;
+		}
+		if (mixinClassName.endsWith("PlayerSavedHealthCompatMixin")) {
 			return levelsLoaded && attributesLoaded;
 		}
 		if (mixinClassName.endsWith("HungerLevelsAttributesCompatMixin")) {
