@@ -54,17 +54,20 @@ dependencies {
 	modImplementation "curse.maven:madoku-craft-smelting-1430263:${project.madoku_craft_smelting_version}"
 	modImplementation "curse.maven:madoku-craft-hud-1462772:${project.madoku_craft_hud_version}"
 	modImplementation "curse.maven:madoku-craft-mobs-1466805:${project.madoku_craft_mobs_version}"
+	modImplementation "curse.maven:madoku-craft-farming-1422163:${project.madoku_craft_farming_version}"
+	modImplementation "curse.maven:madoku-craft-levels-1467884:${project.madoku_craft_levels_version}"
+	modImplementation "curse.maven:madoku-craft-pets-1460536:${project.madoku_craft_pets_version}"
 }
 
 processResources {
 	inputs.property "version", project.version
-	inputs.property "madoku_craft_api_version", project.madoku_craft_api_version
+	inputs.property "minecraft_version", project.minecraft_version
 	inputs.property "madoku_craft_api_mod_version", project.madoku_craft_api_mod_version
 
 	filesMatching("fabric.mod.json") {
 		expand(
 			"version": inputs.properties.version,
-			"madoku_craft_api_version": inputs.properties.madoku_craft_api_version,
+			"minecraft_version": inputs.properties.minecraft_version,
 			"madoku_craft_api_mod_version": inputs.properties.madoku_craft_api_mod_version
 		)
 	}

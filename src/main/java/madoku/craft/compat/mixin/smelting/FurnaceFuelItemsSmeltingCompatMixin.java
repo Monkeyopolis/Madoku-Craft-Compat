@@ -13,21 +13,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = AbstractFurnaceBlockEntity.class, priority = 500)
 public abstract class FurnaceFuelItemsSmeltingCompatMixin {
 	@Inject(method = "getBurnDuration", at = @At("RETURN"), cancellable = true)
-	private void madokuCompat$applyItemsThenSmeltingFuel(
+	private void madokuCompat$combineItemsAndSmeltingFuel(
 		FuelValues fuelValues,
 		ItemStack stack,
 		CallbackInfoReturnable<Integer> cir
 	) {
-		if (!MadokuItem.isEnabled() || !MadokuSmeltingManager.isEnabled()) {
-			return;
+		int combinedFuelTicks = resolveVanillaFuelTicks(fuelValues, stack);
+		if (MadokuItem.isEnabled()) {
+			combinedFuelTicks = MadokuItem.adjustFuelTicks(stack, combinedFuelTicks);
+		}
+		if (MadokuSmeltingManager.isEnabled()) {
+			AbstractFurnaceBlockEntity self = (AbstractFurnaceBlockEntity) (Object) this;
+			combinedFuelTicks = MadokuSmeltingManager.getAdjustedFuelTicks(self, stack, combinedFuelTicks);
 		}
 
-		AbstractFurnaceBlockEntity self = (AbstractFurnaceBlockEntity) (Object) this;
-		int vanillaFuelTicks = fuelValues.burnDuration(stack);
-		int itemsFuelTicks = MadokuItem.adjustFuelTicks(stack, vanillaFuelTicks);
-		int adjustedFuelTicks = MadokuSmeltingManager.getAdjustedFuelTicks(self, stack, itemsFuelTicks);
-		if (adjustedFuelTicks != cir.getReturnValue()) {
-			cir.setReturnValue(adjustedFuelTicks);
+		int currentFuelTicks = cir.getReturnValue();
+		if (combinedFuelTicks != currentFuelTicks) {
+			cir.setReturnValue(combinedFuelTicks);
 		}
+	}
+
+	private static int resolveVanillaFuelTicks(FuelValues fuelValues, ItemStack stack) {
+		if (fuelValues == null || stack == null || stack.isEmpty()) {
+			return 0;
+		}
+		return fuelValues.burnDuration(stack);
 	}
 }

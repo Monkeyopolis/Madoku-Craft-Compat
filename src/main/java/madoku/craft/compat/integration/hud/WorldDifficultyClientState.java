@@ -1,10 +1,10 @@
 package madoku.craft.compat.integration.hud;
 
-public final class MobsHudDifficultyClientState {
+public final class WorldDifficultyClientState {
 	private static volatile int difficultyLevel = 1;
 	private static volatile boolean hasServerDifficulty = false;
 
-	private MobsHudDifficultyClientState() {
+	private WorldDifficultyClientState() {
 	}
 
 	public static void update(int level) {
