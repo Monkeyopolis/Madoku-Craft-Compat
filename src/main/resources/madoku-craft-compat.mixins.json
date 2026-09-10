@@ -1,28 +1,18 @@
 {
-	"required": true,
-	"package": "madoku.craft.compat.mixin",
-	"plugin": "madoku.craft.compat.mixin.MadokuCompatMixinPlugin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"attributes.MadokuLuckFarmingCompatMixin",
-		"attributes.HungerHudSyncAttributesCompatMixin",
-		"attributes.HungerPlayerStateAccessor",
-		"farming.BlockFarmingAttributesCompatMixin",
-		"farming.FarmingItemsMetadataCompatMixin",
-		"levels.LevelsAttributesConfigCompatMixin",
-		"levels.LevelsAttributesExtraStatsCompatMixin",
-		"levels.LevelsHealthAttributesCompatMixin",
-		"levels.PlayerSavedHealthCompatMixin",
-		"levels.HungerLevelsAttributesCompatMixin",
-		"mobs.MadokuDifficultyConfigPetsHagCompatMixin",
-		"mobs.MadokuLuckMobsConfigCompatMixin",
-		"mobs.MadokuMobConfigPetsHagCompatMixin",
-		"mobs.MadokuMobAttributesLuckCompatMixin",
-		"mobs.MadokuMobPetsHagCompatMixin",
-		"smelting.FuelValuesItemsSmeltingCompatMixin",
-		"smelting.FurnaceFuelItemsSmeltingCompatMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": false,
+  "package": "madoku.craft.mixin",
+  "plugin": "madoku.craft.mixin.compat.MadokuCompatMixinPlugin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "attributes.LivingEntityArmorDamageMixin",
+    "attributes.LivingEntityLuckLootMixin",
+    "farming.BlockFarmingDropsMixin",
+    "farming.LootTableFarmingMixin",
+    "utility.ConfiguredFuelValuesMixin"
+  ],
+  "client": [
+    "color.BiomeTemperatureColorMixin",
+    "color.SpruceBirchLeafTintMixin"
+  ],
+  "injectors": { "defaultRequire": 1 }
 }

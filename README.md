@@ -1,46 +1,32 @@
-## Madoku Craft: Compat
+## Overview:
 
-Madoku Craft: Compat is a Fabric MOD that integrates all Madoku Craft MODs together.
-It allows supported MODs to seemlessly work together.
+Madoku Craft: Compat connects supported modules together.
+It allows their gameplay systems to interconnect with each other.
 
 ## Dependencies:
 
 - Fabric API
-- Madoku Craft API
+- Madoku Craft: Core
 
-## Supported Mods:
+## Features:
 
-- Madoku Craft: Attributes
-- Madoku Craft: Items
-- Madoku Craft: HUD
-- Madoku Craft: Smelting
-- Madoku Craft: Mobs
-- Madoku Craft: Farming
-- Madoku Craft: Levels
-- Madoku Craft: Pets
+**Madoku Craft: Levels:**
 
-## Implementation:
+- Expands the available upgradable attributes.
+- It allows you to upgrade luck and hunger attributes.
 
-- Linked Madoku Craft: Items with Madoku Craft: Smelting.
-This allows Fuel Items to interact with Furnaces.
+**Madoku Craft: Hud:**
 
-- Linked Madoku Craft: HUD with Madoku Craft: Attributes.
-This allows HUD to display the modded Attributes in the UI.
+- Expands the UI to display certain UIs.
+- It adds difficulty and luck UIs.
 
-- Linked Madoku Craft: HUD with Madoku Craft: Mobs.
-This allows HUD to display the Difficulty the Player is in.
+**Madoku Craft: Core:**
 
-- Linked Madoku Craft: Farming with Madoku Craft: Items.
-This allows farming Items to display seasonal tooltips.
+- It allows seasonal colors to display through the sodium pipeline.
+- It also allows to upgrade certain item's level using the smithing table.
 
-- Linked Madoku Craft: Levels with Madoku Craft: Attributes.
-This expands the upgradable Attributes in the Leveling system.
+## Supported Modules:
 
-- Linked Madoku Craft: Attributes with Madoku Craft: Mobs.
-This allows Luck to affect chance related MOB behavior.
-
-- Linked Madoku Craft: Farming with Madoku Craft: Attributes.
-This allows Luck to increase Crop Yield.
-
-- Linked Madoku Craft: Pets with Madoku Craft: Mobs.
-This allows Hags to be incorporated into the MOB system.
+- Sodium
+- Iris
+- Madoku Craft modules.

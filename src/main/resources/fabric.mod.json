@@ -1,48 +1,38 @@
 {
-	"schemaVersion": 1,
-	"id": "madoku-craft-compat",
-	"version": "${version}",
-	"name": "Madoku Craft Compat",
-	"description": "A Compat MOD for the Madoku Craft ecosystem.",
-	"authors": [
-		"Monkeyopolis"
-	],
-	"contact": {
-		"homepage": "https://github.com/Monkeyopolis/Madoku-Craft-Compat"
-	},
-	"license": "CC0-1.0",
-	"icon": "assets/madoku-craft-compat/icon.png",
-	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"madoku.craft.compat.MadokuCraftCompat"
-		],
-		"client": [
-			"madoku.craft.compat.MadokuCraftCompatClient"
-		]
-	},
-	"mixins": [
-		"madoku-craft-compat.mixins.json",
-		{
-			"config": "madoku-craft-compat.client.mixins.json",
-			"environment": "client"
-		}
-	],
-	"depends": {
-		"fabricloader": ">=0.19.1",
-		"minecraft": "~${minecraft_version}",
-		"java": ">=25",
-		"fabric-api": "*",
-		"madoku-craft-api": ">=${madoku_craft_api_mod_version}"
-	},
-	"suggests": {
-		"madoku-craft-items": "*",
-		"madoku-craft-smelting": "*",
-		"madoku-craft-hud": "*",
-		"madoku-craft-attributes": "*",
-		"madoku-craft-mobs": "*",
-		"madoku-craft-farming": "*",
-		"madoku-craft-levels": "*",
-		"madoku-craft-pets": "*"
-	}
+  "schemaVersion": 1,
+  "id": "madoku-craft-compat",
+  "version": "${version}",
+  "name": "Madoku Craft: Compat",
+  "description": "An optional compatibility mod for Madoku Craft.",
+  "authors": ["Monkeyopolis"],
+  "license": "CC0-1.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["madoku.craft.java.compat.MadokuCompatInitializer"],
+    "client": ["madoku.craft.java.compat.MadokuCompatClientInitializer"]
+  },
+  "mixins": [
+    "madoku-craft-compat.mixins.json",
+    "madoku-craft.sodium.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "${loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=25",
+    "fabric-api": "${fabric_api_version}",
+    "madoku-craft-core": "*"
+  },
+  "suggests": {
+    "madoku-craft-attributes": "*",
+    "madoku-craft-levels": "*",
+    "madoku-craft-farming": "*",
+    "madoku-craft-mobs": "*",
+    "madoku-craft-pets": "*",
+    "madoku-craft-items": "*",
+    "madoku-craft-hud": "*",
+    "madoku-craft-utility": "*",
+    "madoku-craft-ecosystem": "*",
+    "sodium": "*",
+    "iris": "*"
+  }
 }
