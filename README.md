@@ -7,8 +7,6 @@ It allows their gameplay systems to interconnect with each other.
 
 - Fabric API
 - Madoku Craft: Core
-- Madoku Craft feature modules, consumed from `mavenLocal()` using Loom's
-  remapped `modImplementation` configuration.
 
 ## Features:
 
