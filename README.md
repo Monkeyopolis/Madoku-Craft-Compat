@@ -1,25 +1,34 @@
-## Madoku Craft: Compat
+## Overview:
 
-Madoku Craft: Compat is a Fabric MOD that bridges all Madoku Craft MODs together.
+Madoku Craft: Compat connects supported modules together.
+It allows their gameplay systems to interconnect with each other.
 
 ## Dependencies:
 
 - Fabric API
-- Madoku Craft API
+- Madoku Craft: Core
+- Madoku Craft feature modules, consumed from `mavenLocal()` using Loom's
+  remapped `modImplementation` configuration.
 
-## Supported Mods:
+## Features:
 
-- Madoku Craft: Attributes
-- Madoku Craft: Items
-- Madoku Craft: HUD
-- Madoku Craft: Smelting
-- Madoku Craft: Mobs
+**Madoku Craft: Levels:**
 
-## Implementation:
+- Expands the available upgradable attributes.
+- It allows you to upgrade luck and hunger attributes.
 
-- Linked Madoku Craft: Items with Madoku Craft: Smelting.
-This allows Fuel Items to interact with Furnaces.
-- Linked Madoku Craft: HUD with Madoku Craft: Attributes.
-This allows HUD to display the modded Attributes in the UI.
-- Linked Madoku Craft: HUD with Madoku Craft: Mobs.
-This allows HUD to display the Difficulty the Player is in.
+**Madoku Craft: Hud:**
+
+- Expands the UI to display certain UIs.
+- It adds difficulty and luck UIs.
+
+**Madoku Craft: Core:**
+
+- It allows seasonal colors to display through the sodium pipeline.
+- It also allows to upgrade certain item's level using the smithing table.
+
+## Supported Modules:
+
+- Sodium
+- Iris
+- Madoku Craft modules.
