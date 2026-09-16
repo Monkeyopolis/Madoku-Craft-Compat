@@ -18,13 +18,10 @@ pluginManagement {
 
 rootProject.name = "madoku-craft-compat"
 
-gradle.startParameter.projectCacheDir = new File(
-	System.getProperty("user.home"),
-	".gradle/m/2111/${rootProject.name}"
-)
-
-
-if (gradle.parent == null && gradle.startParameter.projectProperties["use_composite_modules"] == "true") {
+// Resolve the sibling Madoku modules as composite builds, matching the 26.2
+// project. This keeps Compat running against the current module sources
+// instead of silently falling back to stale Maven-local artifacts.
+if (gradle.parent == null) {
 	includeBuild("../core")
 	includeBuild("../ecosystem")
 	includeBuild("../attributes")
