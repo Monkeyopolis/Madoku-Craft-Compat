@@ -8,7 +8,8 @@
     "attributes.LivingEntityLuckLootMixin",
     "farming.BlockFarmingDropsMixin",
     "farming.LootTableFarmingMixin",
-    "utility.ConfiguredFuelValuesMixin"
+    "utility.ConfiguredFuelValuesMixin",
+    "utility.ConfiguredFuelMenuMixin"
   ],
   "client": [
     "color.BiomeTemperatureColorMixin",

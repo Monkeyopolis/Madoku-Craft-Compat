@@ -45,7 +45,8 @@ public final class MadokuCompatMixinPlugin implements IMixinConfigPlugin {
 				MadokuCompatModuleState.FARMING_ID
 			);
 		}
-		if (mixinClassName.endsWith("ConfiguredFuelValuesMixin")) {
+		if (mixinClassName.endsWith("ConfiguredFuelValuesMixin")
+			|| mixinClassName.endsWith("ConfiguredFuelMenuMixin")) {
 			return MadokuCompatModuleState.hasAll(
 				MadokuCompatModuleState.CORE_ID,
 				MadokuCompatModuleState.UTILITY_ID,
