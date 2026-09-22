@@ -4,6 +4,7 @@ import madoku.craft.java.attributes.HealthAPIManager;
 import madoku.craft.java.attributes.HungerAPIManager;
 import madoku.craft.java.attributes.LuckAPIManager;
 import madoku.craft.java.attributes.MadokuAttributesManager;
+import madoku.craft.java.attributes.OxygenAPIManager;
 import madoku.craft.java.compat.MadokuCompatModuleState;
 import madoku.craft.java.levels.LevelsFeatureAPIManager;
 import madoku.craft.java.levels.LevelsFeatureAdapter;
@@ -21,7 +22,7 @@ public final class MadokuLevelsFeatureAdapters {
 			public boolean useAttributesContainer() {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)
 					&& MadokuAttributesManager.isEnabled()
-					&& (HungerAPIManager.isEnabled() || LuckAPIManager.isEnabled());
+					&& (HungerAPIManager.isEnabled() || LuckAPIManager.isEnabled() || OxygenAPIManager.isEnabled());
 			}
 
 			@Override
@@ -34,6 +35,12 @@ public final class MadokuLevelsFeatureAdapters {
 			public boolean isLuckEnabled() {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)
 					&& LuckAPIManager.isEnabled();
+			}
+
+			@Override
+			public boolean isOxygenEnabled() {
+				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)
+					&& OxygenAPIManager.isEnabled();
 			}
 
 			@Override
@@ -61,6 +68,13 @@ public final class MadokuLevelsFeatureAdapters {
 			public void handleMaximumHungerChanged(ServerPlayer player) {
 				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)) {
 					HungerAPIManager.handleMaximumHungerChanged(player);
+				}
+			}
+
+			@Override
+			public void handleMaximumOxygenChanged(ServerPlayer player) {
+				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)) {
+					OxygenAPIManager.handleMaximumOxygenChanged(player);
 				}
 			}
 

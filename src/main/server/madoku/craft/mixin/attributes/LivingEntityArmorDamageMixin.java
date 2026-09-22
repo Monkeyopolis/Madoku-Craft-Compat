@@ -39,12 +39,13 @@ public abstract class LivingEntityArmorDamageMixin {
 			return;
 		}
 
-		if (shouldOverrideVanillaArmor && !skeletonIgnoresArmor && !mobIgnoresArmor && source != null && !bypassesArmor) {
+		boolean canHandleCustomArmor = shouldOverrideVanillaArmor && !skeletonIgnoresArmor && !mobIgnoresArmor;
+		if (canHandleCustomArmor && source != null && !bypassesArmor) {
 			this.hurtArmor(source, amount);
 		}
 
 		float damageAfterArmor;
-		if (shouldOverrideVanillaArmor && !skeletonIgnoresArmor && !mobIgnoresArmor && !bypassesArmor) {
+		if (canHandleCustomArmor) {
 			damageAfterArmor = ArmorAPIManager.applyCustomArmorDamage(entity, source, amount);
 		} else {
 			damageAfterArmor = amount;
