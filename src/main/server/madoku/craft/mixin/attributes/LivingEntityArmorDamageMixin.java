@@ -52,6 +52,7 @@ public abstract class LivingEntityArmorDamageMixin {
 		}
 
 		damageAfterArmor = PetAbilitiesAPIManager.applyFallDamage(entity, source, damageAfterArmor);
+		damageAfterArmor = PetAbilitiesAPIManager.applyDamageReduction(entity, source, damageAfterArmor);
 		damageAfterArmor = PetAbilitiesAPIManager.applyDamageBlock(entity, source, damageAfterArmor);
 		damageAfterArmor = PetAbilitiesAPIManager.applyDamageVulnerabilities(entity, damageAfterArmor);
 		damageAfterArmor = EnchantBooksAPIManager.applyConfiguredSmiteVulnerability(entity, source, damageAfterArmor);

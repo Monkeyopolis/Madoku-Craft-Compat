@@ -7,6 +7,7 @@ import madoku.craft.java.attributes.OxygenAPIManager;
 import madoku.craft.java.compat.MadokuCompatModuleState;
 import madoku.craft.java.core.enchant.EnchantBooksAPIManager;
 import madoku.craft.java.farming.FarmingAPIManager;
+import madoku.craft.java.items.ItemsAPIManager;
 import madoku.craft.java.levels.LevelsPlayerAPIManager;
 
 import net.minecraft.core.BlockPos;
@@ -41,6 +42,16 @@ public final class MadokuAttributeFeatureAdapters {
 					return 0.0D;
 				}
 				return LevelsPlayerAPIManager.getPlayerDefensePoints(player);
+			}
+
+			@Override
+			public double resolveArmorPointStep() {
+				return isItemsEnabled() ? 0.10D : 0.15D;
+			}
+
+			private boolean isItemsEnabled() {
+				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ITEMS_ID)
+					&& ItemsAPIManager.isEnabled();
 			}
 		});
 		LuckAPIManager.registerEnchantmentAdapter(EnchantBooksAPIManager::applyConfiguredFortune);

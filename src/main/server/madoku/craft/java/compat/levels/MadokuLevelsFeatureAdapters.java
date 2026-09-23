@@ -58,13 +58,6 @@ public final class MadokuLevelsFeatureAdapters {
 			}
 
 			@Override
-			public void applyPlayerArmorAbilityBonus(ServerPlayer player) {
-				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.PETS_ID)) {
-					PetAbilitiesAPIManager.applyPlayerArmorAbilityBonus(player);
-				}
-			}
-
-			@Override
 			public void handleMaximumHungerChanged(ServerPlayer player) {
 				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)) {
 					HungerAPIManager.handleMaximumHungerChanged(player);
