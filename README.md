@@ -23,7 +23,6 @@ It allows their gameplay systems to interconnect with each other.
 **Madoku Craft: Core:**
 
 - It allows seasonal colors to display through the sodium pipeline.
-- It also allows to upgrade certain item's level using the smithing table.
 
 ## Supported Modules:
 
