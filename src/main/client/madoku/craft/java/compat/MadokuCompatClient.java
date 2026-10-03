@@ -5,6 +5,7 @@ import madoku.craft.java.core.season.PlayerClimatePayloadAPIManager;
 import madoku.craft.java.core.season.SeasonPayloadAPIManager;
 import madoku.craft.java.core.time.TimePayloadAPIManager;
 import madoku.craft.java.hud.HudPayloadManager;
+import madoku.craft.java.mob.MobIndicatorClient;
 import madoku.craft.java.mob.MobPayloadManager;
 import madoku.craft.java.core.season.ClientSeasonalPrecipitationState;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -19,6 +20,9 @@ public final class MadokuCompatClient {
 	public static void initialize() {
 		if (initialized) return;
 		initialized = true;
+		if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)) {
+			MobIndicatorClient.initialize();
+		}
 		if (!MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.HUD_ID)) return;
 
 		ClientPlayNetworking.registerGlobalReceiver(TimePayloadAPIManager.TYPE,

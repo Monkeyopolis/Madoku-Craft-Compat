@@ -60,6 +60,7 @@ dependencies {
 	clientImplementation "madoku.craft:madoku-craft-core:${project.core_version}@jar"
 	clientImplementation "madoku.craft:madoku-craft-attributes:${project.attributes_version}@jar"
 	clientImplementation "madoku.craft:madoku-craft-hud:${project.hud_version}@jar"
+	clientImplementation "madoku.craft:madoku-craft-mobs:${project.mobs_version}@jar"
 	clientImplementation "madoku.craft:madoku-craft-pets:${project.pets_version}@jar"
 
 	// Sodium/Iris stay optional runtime mods and are not required to compile

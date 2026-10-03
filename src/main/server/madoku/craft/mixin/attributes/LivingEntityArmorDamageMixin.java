@@ -1,6 +1,7 @@
 package madoku.craft.mixin.attributes;
 
 import madoku.craft.java.attributes.ArmorAPIManager;
+import madoku.craft.java.core.damage.DamageVulnerabilityFeatureAPIManager;
 import madoku.craft.java.core.enchant.EnchantBooksAPIManager;
 import madoku.craft.java.mob.MobEntityManager;
 import madoku.craft.java.pet.PetAbilitiesAPIManager;
@@ -32,8 +33,7 @@ public abstract class LivingEntityArmorDamageMixin {
 		boolean shouldHandlePetAbilities = entity instanceof net.minecraft.server.level.ServerPlayer;
 		boolean shouldOverrideVanillaArmor = ArmorAPIManager.shouldOverrideVanillaArmorDamage(source);
 		if (!shouldOverrideVanillaArmor && !fallDamage && !shouldHandlePetAbilities && !skeletonIgnoresArmor && !mobIgnoresArmor) {
-			float damageAfterArmor = PetAbilitiesAPIManager.applyDamageVulnerabilities(entity, amount);
-			damageAfterArmor = EnchantBooksAPIManager.applyConfiguredSmiteVulnerability(entity, source, damageAfterArmor);
+			float damageAfterArmor = applyAdditiveVulnerability(entity, amount);
 			EnchantBooksAPIManager.capturePostArmorDamage(damageAfterArmor);
 			cir.setReturnValue(damageAfterArmor);
 			return;
@@ -54,10 +54,15 @@ public abstract class LivingEntityArmorDamageMixin {
 		damageAfterArmor = PetAbilitiesAPIManager.applyFallDamage(entity, source, damageAfterArmor);
 		damageAfterArmor = PetAbilitiesAPIManager.applyDamageReduction(entity, source, damageAfterArmor);
 		damageAfterArmor = PetAbilitiesAPIManager.applyDamageBlock(entity, source, damageAfterArmor);
-		damageAfterArmor = PetAbilitiesAPIManager.applyDamageVulnerabilities(entity, damageAfterArmor);
-		damageAfterArmor = EnchantBooksAPIManager.applyConfiguredSmiteVulnerability(entity, source, damageAfterArmor);
+		damageAfterArmor = applyAdditiveVulnerability(entity, damageAfterArmor);
 		EnchantBooksAPIManager.capturePostArmorDamage(damageAfterArmor);
 		cir.setReturnValue(damageAfterArmor);
+	}
+
+	private static float applyAdditiveVulnerability(LivingEntity entity, float amount) {
+		float vulnerabilityPercent = DamageVulnerabilityFeatureAPIManager.getDamageVulnerabilityPercent(entity)
+			+ EnchantBooksAPIManager.getConfiguredSmiteVulnerabilityPercent(entity);
+		return amount * (1.0F + Math.max(0.0F, vulnerabilityPercent) / 100.0F);
 	}
 
 	@Redirect(
