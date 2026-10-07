@@ -57,6 +57,11 @@ public abstract class LivingEntityLuckLootMixin {
 				return;
 			}
 			configuredReference = MobEntityManager.resolveZombieMobDropsConfigReference(livingEntity);
+		} else if (isEntityType(livingEntity.getType(), "minecraft:piglin")) {
+			if (!MobEntityManager.isPiglinCustomMobDropsEnabled(livingEntity)) {
+				return;
+			}
+			configuredReference = MobEntityManager.resolvePiglinMobDropsConfigReference(livingEntity);
 		} else {
 			return;
 		}

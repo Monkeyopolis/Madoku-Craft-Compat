@@ -93,6 +93,18 @@ public final class MadokuLootFeatureAdapters {
 					? MobEntityManager.resolveZombieMobDropsConfigReference(entity) : "";
 			}
 
+			@Override
+			public boolean isPiglinCustomMobDropsEnabled(LivingEntity entity) {
+				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
+					&& MobEntityManager.isPiglinCustomMobDropsEnabled(entity);
+			}
+
+			@Override
+			public String resolvePiglinMobDropsConfigReference(LivingEntity entity) {
+				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
+					? MobEntityManager.resolvePiglinMobDropsConfigReference(entity) : "";
+			}
+
 		});
 	}
 }
