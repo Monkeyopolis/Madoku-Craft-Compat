@@ -1,8 +1,9 @@
 package madoku.craft.mixin.color;
 
 import madoku.craft.java.color.ClientColorContext;
+import madoku.craft.java.core.registry.BlockTypeAPIManager;
 import madoku.craft.java.core.season.EnvironmentTransitionConfigAPIManager;
-import madoku.craft.java.core.season.ClientSeasonalPrecipitationState;
+import madoku.craft.java.core.season.SeasonClientAPIManager;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.block.BlockTintSource;
 import net.minecraft.client.color.block.BlockTintSources;
@@ -54,11 +55,11 @@ public final class SpruceBirchLeafTintMixin {
 	private void madokuCraft$useSeasonalLeafTint(BlockState state, CallbackInfoReturnable<List<BlockTintSource>> cir) {
 		if (state == null
 			|| !EnvironmentTransitionConfigAPIManager.getSettings().transitionColorEnabled()
-			|| !ClientSeasonalPrecipitationState.isSynchronized()) {
+			|| !SeasonClientAPIManager.isSynchronized()) {
 			return;
 		}
 
-		String path = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
+		String path = BlockTypeAPIManager.getPath(state.getBlock());
 		if ("spruce_leaves".equals(path)
 			|| "birch_leaves".equals(path)
 			|| "vine".equals(path)
@@ -91,7 +92,7 @@ public final class SpruceBirchLeafTintMixin {
 
 	private static boolean isSeasonalTintEnabled() {
 		return EnvironmentTransitionConfigAPIManager.getSettings().transitionColorEnabled()
-			&& ClientSeasonalPrecipitationState.isSynchronized();
+			&& SeasonClientAPIManager.isSynchronized();
 	}
 }
 

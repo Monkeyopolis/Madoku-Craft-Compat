@@ -1,13 +1,13 @@
 package madoku.craft.mixin.color;
 
 import madoku.craft.java.color.ClientColorContext;
+import madoku.craft.java.core.registry.BlockTypeAPIManager;
 import madoku.craft.java.core.season.EnvironmentTransitionConfigAPIManager;
-import madoku.craft.java.core.season.ClientSeasonalPrecipitationState;
+import madoku.craft.java.core.season.SeasonClientAPIManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.biome.Biome;
@@ -51,10 +51,10 @@ public final class BiomeTemperatureColorMixin {
 		}
 
 		Block block = level.getBlockState(pos).getBlock();
-		Identifier blockId = BuiltInRegistries.BLOCK.getKey(block);
+		Identifier blockId = BlockTypeAPIManager.getId(block);
 		Boolean forcedLeaves = ClientColorContext.forcedLeaves();
 		boolean sampledTarget = isTransitionTarget(blockId);
-		if (!ClientSeasonalPrecipitationState.isSynchronized()
+		if (!SeasonClientAPIManager.isSynchronized()
 			|| (forcedLeaves == null && !sampledTarget)) {
 			return;
 		}
@@ -63,7 +63,7 @@ public final class BiomeTemperatureColorMixin {
 		Biome biome = client.level == null ? null : client.level.getBiome(pos).value();
 		int resolvedColor = temperatureColor(
 			cir.getReturnValue(),
-			ClientSeasonalPrecipitationState.resolveSeasonalTemperature(biome),
+			SeasonClientAPIManager.resolveSeasonalTemperature(biome),
 			leaves);
 		if (forcedLeaves != null && !sampledTarget) {
 			resolvedColor = blendColors(
@@ -97,16 +97,16 @@ public final class BiomeTemperatureColorMixin {
 		double value = Math.max(0.0D, Math.min(100.0D, temperature));
 		int vibrancyColor = baseTemperatureColor(biomeColor, value);
 		int seasonalColor = seasonalTemperatureColor(
-			ClientSeasonalPrecipitationState.getSeason(),
+			SeasonClientAPIManager.getSeason(),
 			value,
-			ClientSeasonalPrecipitationState.getSeasonDayValue(),
-			ClientSeasonalPrecipitationState.getSeasonLengthDays(),
+			SeasonClientAPIManager.getSeasonDayValue(),
+			SeasonClientAPIManager.getSeasonLengthDays(),
 			leaves);
 		return blendColorLayers(
 			biomeColor,
 			vibrancyColor,
 			seasonalColor,
-			seasonalColorInfluence(ClientSeasonalPrecipitationState.getSeason(), value, leaves),
+			seasonalColorInfluence(SeasonClientAPIManager.getSeason(), value, leaves),
 			leaves);
 	}
 

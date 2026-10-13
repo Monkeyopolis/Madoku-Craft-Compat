@@ -1,13 +1,13 @@
 package madoku.craft.java.compat;
 
-import madoku.craft.java.attributes.MadokuAttributesClient;
+import madoku.craft.java.attributes.AttributesClientAPIManager;
 import madoku.craft.java.core.season.PlayerClimatePayloadAPIManager;
+import madoku.craft.java.core.season.SeasonClientAPIManager;
 import madoku.craft.java.core.season.SeasonPayloadAPIManager;
 import madoku.craft.java.core.time.TimePayloadAPIManager;
-import madoku.craft.java.hud.HudPayloadManager;
-import madoku.craft.java.mob.MobIndicatorClient;
+import madoku.craft.java.hud.HudClientAPIManager;
+import madoku.craft.java.mob.MobClientAPIManager;
 import madoku.craft.java.mob.MobPayloadManager;
-import madoku.craft.java.core.season.ClientSeasonalPrecipitationState;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
@@ -21,23 +21,23 @@ public final class MadokuCompatClient {
 		if (initialized) return;
 		initialized = true;
 		if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)) {
-			MobIndicatorClient.initialize();
+			MobClientAPIManager.initialize();
 		}
 		if (!MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.HUD_ID)) return;
 
 		ClientPlayNetworking.registerGlobalReceiver(TimePayloadAPIManager.TYPE,
-			(payload, context) -> HudPayloadManager.setServerTime(payload.day(), payload.hour(), payload.minute()));
+			(payload, context) -> HudClientAPIManager.setServerTime(payload.day(), payload.hour(), payload.minute()));
 		if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)) {
-			MadokuAttributesClient.initialize();
-			MadokuAttributesClient.addHungerListener(HudPayloadManager::setServerHunger);
+			AttributesClientAPIManager.initialize();
+			AttributesClientAPIManager.addHungerListener(HudClientAPIManager::setServerHunger);
 		}
 		if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)) {
 			ClientPlayNetworking.registerGlobalReceiver(MobPayloadManager.TYPE,
-				(payload, context) -> HudPayloadManager.setServerDifficulty(payload.level()));
+				(payload, context) -> HudClientAPIManager.setServerDifficulty(payload.level()));
 		}
 		ClientPlayNetworking.registerGlobalReceiver(SeasonPayloadAPIManager.TYPE, (payload, context) ->
 			context.client().execute(() -> {
-				ClientSeasonalPrecipitationState.update(
+				SeasonClientAPIManager.update(
 					payload.season(),
 					payload.temperatureOffset(),
 					payload.humidityOffset(),
@@ -45,17 +45,17 @@ public final class MadokuCompatClient {
 					payload.seasonDay(),
 					payload.seasonLengthDays()
 				);
-				ClientSeasonalPrecipitationState.refresh(context.client().level);
-				HudPayloadManager.setServerSeason(payload.season());
-				HudPayloadManager.setServerSeasonProgress(payload.seasonDay(), payload.seasonLengthDays());
+				SeasonClientAPIManager.refresh(context.client().level);
+				HudClientAPIManager.setServerSeason(payload.season());
+				HudClientAPIManager.setServerSeasonProgress(payload.seasonDay(), payload.seasonLengthDays());
 			})
 		);
 		ClientPlayNetworking.registerGlobalReceiver(PlayerClimatePayloadAPIManager.TYPE,
 			(payload, context) -> context.client().execute(() ->
-				HudPayloadManager.setServerClimate(payload.temperature(), payload.humidity())
+				HudClientAPIManager.setServerClimate(payload.temperature(), payload.humidity())
 			));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			HudPayloadManager.reset();
+			HudClientAPIManager.reset();
 		});
 	}
 }

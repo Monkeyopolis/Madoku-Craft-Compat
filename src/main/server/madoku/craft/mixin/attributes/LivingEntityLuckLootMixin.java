@@ -1,10 +1,9 @@
 package madoku.craft.mixin.attributes;
 
 import madoku.craft.java.attributes.LuckAPIManager;
+import madoku.craft.java.core.loot.LootFeatureAPIManager;
 import madoku.craft.java.core.loot.LootTableEntitiesAPIManager;
-import madoku.craft.java.mob.MobEntityManager;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import madoku.craft.java.mob.MobEntityTypeAPIManager;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,26 +41,26 @@ public abstract class LivingEntityLuckLootMixin {
 		if (livingEntity == null || level == null || consumer == null || livingEntity.level().isClientSide()) {
 			return;
 		}
-		if (!MobEntityManager.isEnabled()) {
+		if (!LootFeatureAPIManager.isMobEnabled()) {
 			return;
 		}
 
 		String configuredReference = "";
-		if (isEntityType(livingEntity.getType(), "minecraft:bee")) {
-			if (!MobEntityManager.isBeeCustomMobDropsEnabled(livingEntity)) {
+		if (MobEntityTypeAPIManager.isType(livingEntity.getType(), "minecraft:bee")) {
+			if (!LootFeatureAPIManager.isBeeCustomMobDropsEnabled(livingEntity)) {
 				return;
 			}
-			configuredReference = MobEntityManager.resolveBeeMobDropsConfigReference(livingEntity);
+			configuredReference = LootFeatureAPIManager.resolveBeeMobDropsConfigReference(livingEntity);
 		} else if (isZombieType(livingEntity.getType())) {
-			if (!MobEntityManager.isZombieCustomMobDropsEnabled(livingEntity)) {
+			if (!LootFeatureAPIManager.isZombieCustomMobDropsEnabled(livingEntity)) {
 				return;
 			}
-			configuredReference = MobEntityManager.resolveZombieMobDropsConfigReference(livingEntity);
-		} else if (isEntityType(livingEntity.getType(), "minecraft:piglin")) {
-			if (!MobEntityManager.isPiglinCustomMobDropsEnabled(livingEntity)) {
+			configuredReference = LootFeatureAPIManager.resolveZombieMobDropsConfigReference(livingEntity);
+		} else if (MobEntityTypeAPIManager.isType(livingEntity.getType(), "minecraft:piglin")) {
+			if (!LootFeatureAPIManager.isPiglinCustomMobDropsEnabled(livingEntity)) {
 				return;
 			}
-			configuredReference = MobEntityManager.resolvePiglinMobDropsConfigReference(livingEntity);
+			configuredReference = LootFeatureAPIManager.resolvePiglinMobDropsConfigReference(livingEntity);
 		} else {
 			return;
 		}
@@ -110,15 +109,10 @@ public abstract class LivingEntityLuckLootMixin {
 	}
 
 	private static boolean isZombieType(EntityType<?> type) {
-		return isEntityType(type, "minecraft:zombie")
-			|| isEntityType(type, "minecraft:husk")
-			|| isEntityType(type, "minecraft:drowned")
-			|| isEntityType(type, "minecraft:zombie_villager");
-	}
-
-	private static boolean isEntityType(EntityType<?> type, String identifier) {
-		Identifier key = type == null ? null : BuiltInRegistries.ENTITY_TYPE.getKey(type);
-		return identifier != null && identifier.equals(key == null ? null : key.toString());
+		return MobEntityTypeAPIManager.isType(type, "minecraft:zombie")
+			|| MobEntityTypeAPIManager.isType(type, "minecraft:husk")
+			|| MobEntityTypeAPIManager.isType(type, "minecraft:drowned")
+			|| MobEntityTypeAPIManager.isType(type, "minecraft:zombie_villager");
 	}
 
 	private static ServerPlayer resolveLootPlayer(DamageSource source) {

@@ -8,7 +8,7 @@ import madoku.craft.java.compat.mobs.MadokuMobFeatureAdapters;
 import madoku.craft.java.compat.utility.MadokuUtilityFeatureAdapters;
 import madoku.craft.java.core.runtime.AdaptiveIntervalAPIManager;
 import madoku.craft.java.core.time.TimeAPIManager;
-import madoku.craft.java.mob.MadokuMobManager;
+import madoku.craft.java.mob.MobAPIManager;
 import net.minecraft.server.MinecraftServer;
 
 /** Registers adapters owned by Compat. */
@@ -91,7 +91,7 @@ public final class MadokuCompatManager {
 			DIFFICULTY_SYNC_MIN_INTERVAL_TICKS,
 			DIFFICULTY_SYNC_MAX_INTERVAL_TICKS
 		));
-		MadokuMobManager.broadcastDifficultyIfChanged(server);
+		MobAPIManager.broadcastDifficultyIfChanged(server);
 	}
 
 	public static void onServerStopped() {

@@ -6,7 +6,7 @@ import madoku.craft.java.compat.MadokuCompatModuleState;
 import madoku.craft.java.core.loot.LootFeatureAPIManager;
 import madoku.craft.java.core.loot.LootFeatureAdapter;
 import madoku.craft.java.farming.FarmingAPIManager;
-import madoku.craft.java.mob.MobEntityManager;
+import madoku.craft.java.mob.MobAPIManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,43 +66,43 @@ public final class MadokuLootFeatureAdapters {
 			@Override
 			public boolean isMobEnabled() {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					&& MobEntityManager.isEnabled();
+					&& MobAPIManager.isEnabled();
 			}
 
 			@Override
 			public boolean isBeeCustomMobDropsEnabled(LivingEntity entity) {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					&& MobEntityManager.isBeeCustomMobDropsEnabled(entity);
+					&& MobAPIManager.isBeeCustomMobDropsEnabled(entity);
 			}
 
 			@Override
 			public String resolveBeeMobDropsConfigReference(LivingEntity entity) {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					? MobEntityManager.resolveBeeMobDropsConfigReference(entity) : "";
+					? MobAPIManager.resolveBeeMobDropsConfigReference(entity) : "";
 			}
 
 			@Override
 			public boolean isZombieCustomMobDropsEnabled(LivingEntity entity) {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					&& MobEntityManager.isZombieCustomMobDropsEnabled(entity);
+					&& MobAPIManager.isZombieCustomMobDropsEnabled(entity);
 			}
 
 			@Override
 			public String resolveZombieMobDropsConfigReference(LivingEntity entity) {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					? MobEntityManager.resolveZombieMobDropsConfigReference(entity) : "";
+					? MobAPIManager.resolveZombieMobDropsConfigReference(entity) : "";
 			}
 
 			@Override
 			public boolean isPiglinCustomMobDropsEnabled(LivingEntity entity) {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					&& MobEntityManager.isPiglinCustomMobDropsEnabled(entity);
+					&& MobAPIManager.isPiglinCustomMobDropsEnabled(entity);
 			}
 
 			@Override
 			public String resolvePiglinMobDropsConfigReference(LivingEntity entity) {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.MOBS_ID)
-					? MobEntityManager.resolvePiglinMobDropsConfigReference(entity) : "";
+					? MobAPIManager.resolvePiglinMobDropsConfigReference(entity) : "";
 			}
 
 		});

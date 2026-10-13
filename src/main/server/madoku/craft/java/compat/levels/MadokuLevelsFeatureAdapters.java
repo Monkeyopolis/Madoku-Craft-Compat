@@ -3,7 +3,7 @@ package madoku.craft.java.compat.levels;
 import madoku.craft.java.attributes.HealthAPIManager;
 import madoku.craft.java.attributes.HungerAPIManager;
 import madoku.craft.java.attributes.LuckAPIManager;
-import madoku.craft.java.attributes.MadokuAttributesManager;
+import madoku.craft.java.attributes.AttributesAPIManager;
 import madoku.craft.java.attributes.OxygenAPIManager;
 import madoku.craft.java.compat.MadokuCompatModuleState;
 import madoku.craft.java.levels.LevelsFeatureAPIManager;
@@ -21,7 +21,7 @@ public final class MadokuLevelsFeatureAdapters {
 			@Override
 			public boolean useAttributesContainer() {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)
-					&& MadokuAttributesManager.isEnabled()
+					&& AttributesAPIManager.isEnabled()
 					&& (HungerAPIManager.isEnabled() || LuckAPIManager.isEnabled() || OxygenAPIManager.isEnabled());
 			}
 
