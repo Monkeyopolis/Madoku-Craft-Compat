@@ -65,6 +65,13 @@ public final class MadokuLevelsFeatureAdapters {
 			}
 
 			@Override
+			public void restoreJoinHunger(ServerPlayer player) {
+				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)) {
+					HungerAPIManager.restoreJoinHunger(player);
+				}
+			}
+
+			@Override
 			public void handleMaximumOxygenChanged(ServerPlayer player) {
 				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)) {
 					OxygenAPIManager.handleMaximumOxygenChanged(player);
