@@ -56,7 +56,7 @@ public abstract class LivingEntityLuckLootMixin {
 				return;
 			}
 			configuredReference = LootFeatureAPIManager.resolveZombieMobDropsConfigReference(livingEntity);
-		} else if (MobEntityTypeAPIManager.isType(livingEntity.getType(), "minecraft:piglin")) {
+		} else if (isPiglinType(livingEntity.getType())) {
 			if (!LootFeatureAPIManager.isPiglinCustomMobDropsEnabled(livingEntity)) {
 				return;
 			}
@@ -118,6 +118,11 @@ public abstract class LivingEntityLuckLootMixin {
 			|| MobEntityTypeAPIManager.isType(type, "minecraft:husk")
 			|| MobEntityTypeAPIManager.isType(type, "minecraft:drowned")
 			|| MobEntityTypeAPIManager.isType(type, "minecraft:zombie_villager");
+	}
+
+	private static boolean isPiglinType(EntityType<?> type) {
+		return MobEntityTypeAPIManager.isType(type, "minecraft:piglin")
+			|| MobEntityTypeAPIManager.isType(type, "minecraft:zombified_piglin");
 	}
 
 	private static ServerPlayer resolveLootPlayer(DamageSource source) {
