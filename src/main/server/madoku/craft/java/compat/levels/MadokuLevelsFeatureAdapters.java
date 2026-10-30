@@ -8,7 +8,6 @@ import madoku.craft.java.attributes.OxygenAPIManager;
 import madoku.craft.java.compat.MadokuCompatModuleState;
 import madoku.craft.java.levels.LevelsFeatureAPIManager;
 import madoku.craft.java.levels.LevelsFeatureAdapter;
-import madoku.craft.java.pet.PetAbilitiesAPIManager;
 
 import net.minecraft.server.level.ServerPlayer;
 
@@ -41,20 +40,6 @@ public final class MadokuLevelsFeatureAdapters {
 			public boolean isOxygenEnabled() {
 				return MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.ATTRIBUTES_ID)
 					&& OxygenAPIManager.isEnabled();
-			}
-
-			@Override
-			public void applyPlayerMaxHealthAbilityBonus(ServerPlayer player) {
-				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.PETS_ID)) {
-					PetAbilitiesAPIManager.applyPlayerMaxHealthAbilityBonus(player);
-				}
-			}
-
-			@Override
-			public void applyPlayerDamageAbilityBonus(ServerPlayer player) {
-				if (MadokuCompatModuleState.isLoaded(MadokuCompatModuleState.PETS_ID)) {
-					PetAbilitiesAPIManager.applyPlayerDamageAbilityBonus(player);
-				}
 			}
 
 			@Override
