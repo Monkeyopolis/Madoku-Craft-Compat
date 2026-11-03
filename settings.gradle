@@ -22,4 +22,5 @@ if (gradle.parent == null) {
 	includeBuild("../items")
 	includeBuild("../utility")
 	includeBuild("../hud")
+	includeBuild("../quests")
 }
