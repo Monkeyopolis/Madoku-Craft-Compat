@@ -2,10 +2,12 @@ package madoku.craft.mixin.farming;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import madoku.craft.java.attributes.LuckAPIManager;
+import madoku.craft.java.core.helper.BlockDropContextAPIManager;
 import madoku.craft.java.farming.FarmingAPIManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -99,7 +101,9 @@ public abstract class BlockFarmingDropsMixin {
 		ItemStack tool,
 		CallbackInfo ci
 	) {
-		if (!FarmingAPIManager.isEnabled() || !FarmingAPIManager.isManagedHarvestState(level, pos, state)) {
+		boolean enabled = FarmingAPIManager.isEnabled();
+		boolean managed = enabled && FarmingAPIManager.isManagedHarvestState(level, pos, state);
+		if (!enabled || !managed) {
 			return;
 		}
 
@@ -114,6 +118,8 @@ public abstract class BlockFarmingDropsMixin {
 			return;
 		}
 		LuckAPIManager.applyManagedCropDrops(random, drops, tool);
+		ServerPlayer player = BlockDropContextAPIManager.resolvePlayer();
+		FarmingAPIManager.notifyCropHarvest(player, drops);
 		for (ItemStack drop : drops) {
 			if (drop != null && !drop.isEmpty()) {
 				Block.popResource(level, pos, drop);

@@ -2,11 +2,14 @@ package madoku.craft.mixin.farming;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import madoku.craft.java.attributes.LuckAPIManager;
+import madoku.craft.java.core.helper.BlockDropContextAPIManager;
+import madoku.craft.java.core.loot.LootFeatureAPIManager;
 import madoku.craft.java.farming.FarmingAPIManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -52,6 +55,10 @@ public abstract class LootTableFarmingMixin {
 			return;
 		}
 		LuckAPIManager.applyManagedCropDrops(lootContext, drops);
+		ServerPlayer player = BlockDropContextAPIManager.resolvePlayer();
+		if (player == null) player = LootFeatureAPIManager.resolveLootPlayer(lootContext);
+		if (player == null) player = LootFeatureAPIManager.resolveActiveDropPlayer();
+		FarmingAPIManager.notifyCropHarvest(player, drops);
 		FarmingAPIManager.completeCropHarvest(level, pos, state);
 		cir.setReturnValue(drops);
 	}
